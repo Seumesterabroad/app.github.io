@@ -1,10 +1,10 @@
 ## Seumesterabroad
 
-You can use the [editor on GitHub](https://github.com/Seumesterabroad/app.github.io/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+"nom de l'app" est un logiciel qui vous permettra d'organiser votre projet selon l'algorithme " nom de l'algorithme " .
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Createurs
+#### Arthus Daimez
 
-### Markdown
 
 # Header 1
 ## Header 2
