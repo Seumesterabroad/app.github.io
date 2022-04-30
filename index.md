@@ -7,10 +7,9 @@ La méthode PERT est une technique permettant de gérer l'ordonnancement dans un
 Elle a été conçue par la marine américaine afin de permettre de coordonner les travaux de plusieurs milliers de personnes pour aboutir à la réalisation de missiles à ogives nucléaires POLARIS.
 
 Ainsi, la méthode PERT implique au préalable :
-
-    Un découpage précis du projet en tâches ;
-    L'estimation du la durée de chaque tâche ;
-    La nomination d'un chef de projet chargé d'assurer le suivi du projet, de rendre compte si nécessaire et de prendre des décisions en cas d'écart par rapport aux prévisions.
+Un découpage précis du projet en tâches ;
+L'estimation du la durée de chaque tâche ;
+La nomination d'un chef de projet chargé d'assurer le suivi du projet, de rendre compte si nécessaire et de prendre des décisions en cas d'écart par rapport aux prévisions.
 
 
 ### Createurs
@@ -20,7 +19,7 @@ Ainsi, la méthode PERT implique au préalable :
 #### Adam Nessaibia
 
 
-# L'algorithme Pert
+
 ## Header 2
 ### Header 3
 
