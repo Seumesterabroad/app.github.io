@@ -1,6 +1,6 @@
 layout: page
 title: "Telechargement"
-permalink: /https://seumesterabroad.github.io/app.github.io/gh-pages/Telechargement/
+permalink: /https://seumesterabroad.github.io/app.github.io/gh-pages/Telechargement.md/
 
 ## Instructions de telechargement
 #### Pour les utilisateurs de windows: " lien de telechargement"
