@@ -12,18 +12,19 @@ L'estimation du la durée de chaque tâche ;
 La nomination d'un chef de projet chargé d'assurer le suivi du projet, de rendre compte si nécessaire et de prendre des décisions en cas d'écart par rapport aux prévisions.
 
 
-### Createurs
-#### Arthus Daimez
-#### Anais Druelle
-#### Quentin Heidrich
-#### Adam Nessaibia
-
-
-
-## Header 2
-### Header 3
-
-**Bold** and _Italic_ and `Code` text
-### Jekyll Themes
+## Equipe créatrice
+### Arthus Daimez
+#### Responsable de l'interface utilisateur. 
+"description d'arthus"
+### Anais Druelle
+#### Responsable de la liaison internet. 
+"description d'anais"
+### Quentin Heidrich
+#### Chef du groupe et responsable de la conception de l'algorithme.
+"description de quentin"
+### Adam Nessaibia
+#### Responsable de la construction du graphique et du site internet. 
+"description d'adam"
 
 ### Support or Contact
+adam.nessaibia@epita.fr
