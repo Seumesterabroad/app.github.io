@@ -27,7 +27,8 @@ La nomination d'un chef de projet chargé d'assurer le suivi du projet, de rendr
 "description d'adam"
 
 ## Telechargement
-### Cahier des charges du projet: /gh-pages/cahier_des_charges_SEUMester_Abroad.pdf
+### Cahier des charges du projet: 
+/gh-pages/cahier_des_charges_SEUMester_Abroad.pdf
 ### Pour les utilisateurs de windows: " lien de telechargement"
 Télechargez l'éxécutable en cliquant sur le lien ci-dessus. Executez le fichier télécharger. Lancez le logiciel.
 
