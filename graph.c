@@ -93,7 +93,7 @@ void add_edge(graph_t *graph, int src, int dest)
 }
 
 /* Function to print the adjacency list of graph*/
-void displayGraph(graph_p graph)
+void display_graph(graph_p graph)
 {
     int i;
     for (i = 0; i < graph->num_vertices; i++)
@@ -159,6 +159,19 @@ void init_start_end(graph_p graph)
     graph->nodelist[graph->num_vertices - 1].time = 0;
 }
 
+void update_end(graph_p graph)
+{
+    int i;
+    for (i = 0; i < graph->num_vertices; i++)
+    {
+        adjlist_node_p adjListPtr = graph->nodelist[i].head;
+        if (adjListPtr == NULL && i != graph->num_vertices-1)
+        {
+            add_edge(graph,i,graph->num_vertices-1);
+        }
+    }
+}
+
 graph_p data_graph(struct list* head, int nb_comp) 
 {
     //We create the graph
@@ -173,6 +186,8 @@ graph_p data_graph(struct list* head, int nb_comp)
         data_pert = current->data_pert;
         add_data(graph,*data_pert);
     }
+
+    update_end(graph);
 
     return graph;
 }
@@ -229,33 +244,12 @@ int parseur(struct data_pert* data, char* str, unsigned long nb_compo)
         if(anter >= data->index)
             return 0;
         data->anterio[anter] = 1; 
-    } 
-        
+    }   
     return 1;
 }
 
 int main()
 {
-    /* graph_p dir_graph = createGraph(5, DIRECTED);
-
-    addEdge(dir_graph, 0, 1);
-    addEdge(dir_graph, 0, 4);
-    addEdge(dir_graph, 1, 2);
-    addEdge(dir_graph, 1, 3);
-    addEdge(dir_graph, 1, 4);
-    addEdge(dir_graph, 2, 3);
-    addEdge(dir_graph, 3, 4);
-
-    addTime(dir_graph,0,15);
-    addTime(dir_graph,1,15);
-    addTime(dir_graph,2,15);
-    addTime(dir_graph,3,15);
-    addTime(dir_graph,4,15);
-
-    printf("\nDIRECTED GRAPH");
-    displayGraph(dir_graph);
-    destroyGraph(dir_graph); */
-
     data_pert data_1 = 
     {
       .anterio = NULL,
@@ -289,7 +283,7 @@ int main()
     list* sentinel = &sentinelle;
     parseur(&data_1,"0",3);
     parseur(&data_2,"0",3);
-    parseur(&data_3,"1",3);
+    parseur(&data_3,"1/2",3);
         
     struct list *temp = sentinel;
     while(temp -> next != NULL)
@@ -321,5 +315,5 @@ int main()
 
     graph_p graph = data_graph(sentinel,3);
 
-    displayGraph(graph);
+    display_graph(graph);
 }
