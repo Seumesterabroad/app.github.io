@@ -2,6 +2,11 @@
 #ifndef _GRAPH_H_
 #define _GRAPH_H_
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <err.h>
+#include "string.h"
+
 
 /* Adjacency list node*/
 typedef struct adjlist_node
@@ -29,5 +34,19 @@ typedef struct graph
     int num_vertices;         /*Number of vertices*/
     node_t *nodelist;     /*node lists' array*/
 }graph_t, *graph_p;
+
+typedef struct data_pert
+{
+    unsigned char *anterio;
+    unsigned long duree;
+    char* name;
+    unsigned long index;
+}data_pert;
+
+typedef struct list
+{
+    struct data_pert *data_pert;
+    struct list *next;
+}list;
 
 #endif

@@ -3,15 +3,20 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -g
 
-all: graph
+all: main
 
-graph: graph.o
-graph.o: graph.c graph.h
+main: parser.o graph_operation.o graph_processing.o graph.h main.c
+
+parser.o: parser.h parser.c
+
+graph_operation.o: graph_operation.h graph_operation.c
+
+graph_processing.o: graph_processing.h graph_operation.h graph_processing.c
 
 .PHONY: clean
 
 clean:
-	${RM} graph 
+	rm *.o main
 	
 
 #END
