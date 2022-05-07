@@ -11,7 +11,7 @@ parser.o: parser.h parser.c
 
 graph_operation.o: graph_operation.h graph_operation.c
 
-graph_processing.o: graph_processing.h graph_operation.h graph_processing.c
+graph_processing.o: graph_processing.h graph_operation.o graph_processing.c 
 
 .PHONY: clean
 
