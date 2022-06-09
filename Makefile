@@ -2,7 +2,6 @@
 
 CC = gcc
 CFLAGS = -Wall -Wextra -g
-
 all: main
 
 main: parser.o graph_operation.o graph_processing.o graph.h main.c

@@ -108,18 +108,18 @@ int main()
     };
     
     list* sentinel = &sentinelle;
-    parser(&data_1,"0",12);
-    parser(&data_2,"0",12);
-    parser(&data_3,"0",12);
-    parser(&data_4,"1",12);
-    parser(&data_5,"2",12);
-    parser(&data_6,"4/5",12);
-    parser(&data_7,"3",12);
-    parser(&data_8,"7",12);
-    parser(&data_9,"6/8",12);
-    parser(&data_10,"4",12);
-    parser(&data_11,"6/10",12);
-    parser(&data_12,"9/10",12);
+    parser(&data_1,"0",13);
+    parser(&data_2,"0",13);
+    parser(&data_3,"0",13);
+    parser(&data_4,"1",13);
+    parser(&data_5,"2",13);
+    parser(&data_6,"4/5",13);
+    parser(&data_7,"3",13);
+    parser(&data_8,"7",13);
+    parser(&data_9,"6/8",13);
+    parser(&data_10,"4",13);
+    parser(&data_11,"6/10",13);
+    parser(&data_12,"9/10",13);
         
     struct list *temp = sentinel;
     while(temp -> next != NULL)
@@ -239,13 +239,17 @@ int main()
 
     unsigned long *dist2 = calloc(G->num_vertices, sizeof(unsigned long));
     Bellman(Ginv, nb_comp+1, dout, dist2);
-
+    
     unsigned long end = dist1[nb_comp+1];
     for (int i = 0; i < nb_comp+2; i++)
     {
         printf("\nTâche %s: commencer jour %lu avec une marge de %lu",G->nodelist[i].name, dist1[i], end - dist1[i] - dist2[i] - G->nodelist[i].time);
     }
     printf("\n");
+
+    update_val(G,dist1,dist2);
+
+    print_graph(G);
     
     return 0;
 }

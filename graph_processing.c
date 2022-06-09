@@ -120,3 +120,41 @@ void Bellman(graph_p G, int src, unsigned long* din, unsigned long* dist)
         }
     }
 }
+
+void update_val(graph_p G, unsigned long *dist1,unsigned long *dist2)
+{
+    unsigned long end = dist1[G->num_vertices-1];
+    for (int i = 0; i < G->num_vertices; i++)
+    {
+        G->nodelist[i].soonest_time_done = dist1[i];
+        G->nodelist[i].latest_time_done = end - dist2[i] - G->nodelist[i].time;
+        G->nodelist[i].marge = G->nodelist[i].latest_time_done - G->nodelist[i].soonest_time_done;
+    }
+}
+
+void print_graph(graph_p G)
+{
+    for(int i = 0; i < G->num_vertices; i++)
+    {
+        printf("Task %s:\nSoonest time to start: %lu\nLatest time to start: %lu\nSlack: %lu\n",G->nodelist[i].name, G->nodelist[i].soonest_time_done,G->nodelist[i].latest_time_done,G->nodelist[i].marge);
+        if(G->nodelist[i].marge == 0)
+            printf("CRITICAL TASK\n");
+        printf("\n");
+    }
+}
+
+void __dfs(graph_p G, int current, int* M)
+{
+    M[current] = 1;
+    G->nodelist[current]; //le noeud en dfs
+    for(adjlist_node_p adj = G->nodelist[current].head; adj != NULL; adj = adj->next)
+    {
+        __dfs(G, adj->vertex,M);
+    }
+}
+
+void dfs(graph_p G)
+{
+    int* M = calloc(sizeof(int),G->num_vertices);
+    __dfs(G,0,M);
+}

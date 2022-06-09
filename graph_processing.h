@@ -16,4 +16,8 @@ void build_from_list(list* L, graph_p G, graph_p Ginv, unsigned long *dout, unsi
 
 void Bellman(graph_p G, int src, unsigned long* din, unsigned long* dist);
 
+void update_val(graph_p G, unsigned long *dist1,unsigned long *dist2);
+
+void print_graph(graph_p G);
+
 #endif

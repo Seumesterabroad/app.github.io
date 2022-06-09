@@ -62,8 +62,8 @@ void destroyGraph(graph_p graph)
         free(graph);
     }
 }
-
 /* Adds an edge to a graph*/
+
 void add_edge(graph_t *graph, int src, int dest)
 {
     /* Add an edge from src to dst in the adjacency list*/
