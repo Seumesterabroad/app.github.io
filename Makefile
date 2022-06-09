@@ -1,7 +1,7 @@
 #Makefile
 
 CC = gcc
-CFLAGS = -Wall -Wextra -g
+CFLAGS = -Wall -Wextra -g -fsanitize=address
 all: main
 
 main: parser.o graph_operation.o graph_processing.o graph.h main.c

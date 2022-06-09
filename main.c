@@ -229,27 +229,47 @@ int main()
     graph_p Ginv = createGraph(nb_comp + 2);
     build_from_list(sentinel, G, Ginv, dout, din);
 
-    //printf("Normal graph\n");
-    //display_graph(G);
-    //printf("\nInversed graph\n");
-    //display_graph(Ginv);
 
     unsigned long *dist1 = calloc(G->num_vertices, sizeof(unsigned long));
     Bellman(G, 0, din, dist1);
 
     unsigned long *dist2 = calloc(G->num_vertices, sizeof(unsigned long));
     Bellman(Ginv, nb_comp+1, dout, dist2);
-    
-    unsigned long end = dist1[nb_comp+1];
-    for (int i = 0; i < nb_comp+2; i++)
-    {
-        printf("\nTâche %s: commencer jour %lu avec une marge de %lu",G->nodelist[i].name, dist1[i], end - dist1[i] - dist2[i] - G->nodelist[i].time);
-    }
-    printf("\n");
 
     update_val(G,dist1,dist2);
 
+    
+
     print_graph(G);
+
+    free(dist1);
+    free(dist2);
+    free(din);
+    free(dout);
+    destroyGraph(G);
+    destroyGraph(Ginv);
+
+    new_c = sentinel->next;
+    for (list* it = sentinel->next; it != NULL; )
+    {
+        new_c = it;
+        temp = it->next;
+        free(new_c);
+        it = temp; 
+    }
+
+    free(data_1.anterio);
+    free(data_2.anterio);
+    free(data_3.anterio);
+    free(data_4.anterio);
+    free(data_5.anterio);
+    free(data_6.anterio);
+    free(data_7.anterio);
+    free(data_8.anterio);
+    free(data_9.anterio);
+    free(data_10.anterio);
+    free(data_11.anterio);
+    free(data_12.anterio);
     
     return 0;
 }

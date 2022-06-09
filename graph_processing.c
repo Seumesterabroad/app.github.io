@@ -142,19 +142,3 @@ void print_graph(graph_p G)
         printf("\n");
     }
 }
-
-void __dfs(graph_p G, int current, int* M)
-{
-    M[current] = 1;
-    G->nodelist[current]; //le noeud en dfs
-    for(adjlist_node_p adj = G->nodelist[current].head; adj != NULL; adj = adj->next)
-    {
-        __dfs(G, adj->vertex,M);
-    }
-}
-
-void dfs(graph_p G)
-{
-    int* M = calloc(sizeof(int),G->num_vertices);
-    __dfs(G,0,M);
-}

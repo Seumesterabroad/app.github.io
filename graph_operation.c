@@ -54,6 +54,7 @@ void destroyGraph(graph_p graph)
                     adjListPtr = adjListPtr->next;
                     free(tmp);
                 }
+                free(graph->nodelist[v].name);
             }
             /*Free the adjacency list array*/
             free(graph->nodelist);
