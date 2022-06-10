@@ -1,0 +1,7 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/arthus/Documents/EPITA/S4/Projet/Git/SEUMester Abroad'
+gcc `pkg-config --cflags gtk+-3.0` -Wall -Wextra -pthread -g   -c -o graph_operation.o graph_operation.c
+gcc `pkg-config --cflags gtk+-3.0` -Wall -Wextra -pthread -g   -c -o graph_processing.o graph_processing.c
+gcc `pkg-config --cflags gtk+-3.0` -Wall -Wextra -pthread -g    interface.c graph_operation.o graph_processing.o interface.h  `pkg-config --libs gtk+-3.0` -lSDL -lSDL_image -o interface
+make: Leaving directory '/home/arthus/Documents/EPITA/S4/Projet/Git/SEUMester Abroad'
+ 

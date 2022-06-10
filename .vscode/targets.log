@@ -1,0 +1,382 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 4.2.1
+# Built for x86_64-pc-linux-gnu
+# Copyright (C) 1988-2016 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Fri Jun 10 15:36:59 2022
+
+# Variables
+
+# 'override' directive
+GNUMAKEFLAGS := 
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# environment
+DESKTOP_SESSION = ubuntu
+# default
+.SHELLFLAGS := -c
+# environment
+XDG_SESSION_CLASS = user
+# environment
+SNAP_COMMON = /var/snap/code/common
+# environment
+XDG_SESSION_TYPE = x11
+# environment
+VSCODE_LOG_NATIVE = false
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# environment
+IM_CONFIG_PHASE = 1
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+XAUTHORITY = /run/user/1000/gdm/Xauthority
+# environment
+GDMSESSION = ubuntu
+# environment
+XMODIFIERS = @im=ibus
+# makefile
+CURDIR := /home/arthus/Documents/EPITA/S4/Projet/Git/SEUMester Abroad
+# makefile
+SHELL = /bin/sh
+# environment
+SNAP_DATA = /var/snap/code/98
+# environment
+VSCODE_NLS_CONFIG = {"locale":"fr","availableLanguages":{"*":"fr"},"_languagePackId":"90c96d63e4230154cb1307da73de84dd.fr","_translationsConfigFile":"/home/arthus/.config/Code/clp/90c96d63e4230154cb1307da73de84dd.fr/tcf.json","_cacheRoot":"/home/arthus/.config/Code/clp/90c96d63e4230154cb1307da73de84dd.fr","_resolvedLanguagePackCoreLocation":"/home/arthus/.config/Code/clp/90c96d63e4230154cb1307da73de84dd.fr/4af164ea3a06f701fe3e89a2bcbb421d2026b68f","_corruptedFile":"/home/arthus/.config/Code/clp/90c96d63e4230154cb1307da73de84dd.fr/corrupted.info","_languagePackSupport":true}
+# environment
+JOURNAL_STREAM = 8:40511
+# makefile (from 'Makefile', line 4)
+CFLAGS = `pkg-config --cflags gtk+-3.0` -Wall -Wextra -pthread -g
+# environment
+XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
+# environment
+SNAP_INSTANCE_NAME = code
+# environment
+SNAP_ARCH = amd64
+# makefile (from 'Makefile', line 1)
+MAKEFILE_LIST :=  Makefile
+# automatic
+@F = $(notdir $@)
+# environment
+GIO_LAUNCHED_DESKTOP_FILE = /var/lib/snapd/desktop/applications/code_code.desktop
+# environment
+USERNAME = arthus
+# environment
+XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+_ = /snap/code/98/usr/share/code/code
+# environment
+MANAGERPID = 1461
+# environment
+LESSOPEN = | /usr/bin/lesspipe %s
+# environment
+VSCODE_CWD = /home/arthus
+# environment
+GSETTINGS_SCHEMA_DIR = /snap/code/98/usr/share/glib-2.0/schemas
+# default
+MAKE_HOST := x86_64-pc-linux-gnu
+# environment
+PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+# environment
+GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
+# environment
+SESSION_MANAGER = local/arthus-VirtualBox:@/tmp/.ICE-unix/1712,unix/arthus-VirtualBox:/tmp/.ICE-unix/1712
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
+# environment
+GDK_PIXBUF_MODULE_FILE = /home/arthus/snap/code/common/.cache/gdk-pixbuf-loaders.cache
+# environment
+SNAP = /snap/code/98
+# environment
+SNAP_VERSION = 4af164ea
+# environment
+XDG_MENU_PREFIX = gnome-
+# environment
+VSCODE_LOG_STACK = false
+# environment
+DISABLE_WAYLAND = 1
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+INVOCATION_ID = 777c532d495d48568deea93a02730b2d
+# environment
+GDK_PIXBUF_MODULEDIR = /snap/code/98/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+# makefile (from 'Makefile', line 5)
+LDLIBS = `pkg-config --libs gtk+-3.0` -lSDL -lSDL_image
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
+# environment
+LS_COLORS = 
+# environment
+XDG_SESSION_DESKTOP = ubuntu
+# environment
+SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
+# environment
+GIO_LAUNCHED_DESKTOP_FILE_PID = 50949
+# automatic
+%F = $(notdir $%)
+# environment
+DISPLAY = :0
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+SNAP_INSTANCE_KEY = 
+# environment
+PWD = /home/arthus/Documents/EPITA/S4/Projet/Git/SEUMester Abroad
+# default
+.LOADED := 
+# environment
+SSH_AGENT_PID = 1672
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
+# environment
+GTK_MODULES = gail:atk-bridge
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+HOME = /home/arthus
+# environment
+LESSCLOSE = /usr/bin/lesspipe %s %s
+# environment
+VSCODE_CLI = 1
+# environment
+VSCODE_CODE_CACHE_PATH = /home/arthus/.config/Code/CachedData/4af164ea3a06f701fe3e89a2bcbb421d2026b68f
+# environment
+LOGNAME = arthus
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+# environment
+SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
+# environment
+SNAP_CONTEXT = 3yF-ldc4OhtKPqSp9A7iTdvaujsGemNAS3SfINTm6es_eIUQvFQp
+# environment
+ELECTRON_NO_ATTACH_CONSOLE = 1
+# environment
+SNAP_USER_COMMON = /home/arthus/snap/code/common
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# environment
+GNOME_DESKTOP_SESSION_ID = this-is-deprecated
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+MAKELEVEL := 0
+# environment
+SNAP_REAL_HOME = /home/arthus
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# environment
+QT_IM_MODULE = ibus
+# environment
+SNAP_USER_DATA = /home/arthus/snap/code/98
+# environment
+SHLVL = 0
+# makefile (from 'Makefile', line 3)
+CC = gcc
+# environment
+GNOME_SHELL_SESSION_MODE = ubuntu
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-b959fc74-1d90-4366-8fdc-e3543aaedac5.sock
+# default
+MAKE_VERSION := 4.2.1
+# environment
+USER = arthus
+# environment
+SNAP_REVISION = 98
+# makefile
+.DEFAULT_GOAL := all
+# environment
+XDG_CURRENT_DESKTOP = Unity
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# default
+MAKE_COMMAND := make
+# default
+.VARIABLES := 
+# automatic
+*F = $(notdir $*)
+# environment
+VSCODE_IPC_HOOK = /run/user/1000/vscode-3290d22e-1.68.0-main.sock
+# environment
+BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
+# makefile
+MAKEFLAGS = pqrR
+# environment
+MFLAGS = -pqrR
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+GDK_BACKEND = x11
+# automatic
++F = $(notdir $+)
+# environment
+QT_ACCESSIBILITY = 1
+# default
+MAKEFILES := 
+# environment
+SNAP_COOKIE = 3yF-ldc4OhtKPqSp9A7iTdvaujsGemNAS3SfINTm6es_eIUQvFQp
+# automatic
+<F = $(notdir $<)
+# environment
+SNAP_NAME = code
+# environment
+LC_ALL = C
+# environment
+GJS_DEBUG_TOPICS = JS ERROR;JS LOG
+# automatic
+^F = $(notdir $^)
+# default
+SUFFIXES := 
+# environment
+SNAP_REEXEC = 
+# environment
+CHROME_DESKTOP = code-url-handler.desktop
+# environment
+WINDOWPATH = 2
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# environment
+GJS_DEBUG_OUTPUT = stderr
+# default
+.RECIPEPREFIX := 
+# environment
+LANG = C
+# environment
+VSCODE_PID = 50996
+# variable set hash-table stats:
+# Load=123/1024=12%, Rehash=0, Collisions=19/148=13%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 2053, inode 792865): 15 files, no impossibilities.
+
+# 15 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+interface: graph_operation.o graph_processing.o interface.h interface.c
+#  Implicit rule search has been done.
+#  Last modified 2022-06-10 15:34:31.992612834
+ 
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+graph_operation.h:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-10 14:47:45.530379131
+#  File has been updated.
+#  Successfully updated.
+
+all: interface
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Successfully updated.
+
+.PHONY: clean
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+graph_processing.o: graph_processing.h graph_operation.o graph_operation.o
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-10 15:34:15.876039201
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+interface.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-10 15:33:13.825867215
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+interface.h:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-10 15:33:08.049668142
+#  File has been updated.
+#  Successfully updated.
+
+graph_operation.o: graph_operation.h graph_operation.c
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+clean:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 18):
+	rm *.o
+	
+
+# Not a target:
+graph_processing.h:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-10 14:47:45.530379131
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+graph_operation.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-10 14:47:45.530379131
+#  File has been updated.
+#  Successfully updated.
+
+# files hash-table stats:
+# Load=14/1024=1%, Rehash=0, Collisions=0/40=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 24 / storage = 266 B / avg = 11 B
+# current buf: size = 8162 B / used = 266 B / count = 24 / avg = 11 B
+
+# strcache performance: lookups = 47 / hit rate = 48%
+# hash-table stats:
+# Load=24/8192=0%, Rehash=0, Collisions=1/47=2%
+# Finished Make data base on Fri Jun 10 15:36:59 2022
+
+ 

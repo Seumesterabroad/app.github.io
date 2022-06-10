@@ -37,16 +37,19 @@ typedef struct graph
 
 typedef struct data_pert
 {
+
     unsigned char *anterio;
     unsigned long duree;
     char* name;
     unsigned long index;
-}data_pert;
+
+} data_pert;
 
 typedef struct list
 {
     struct data_pert *data_pert;
     struct list *next;
-}list;
+    
+} list;
 
 #endif
