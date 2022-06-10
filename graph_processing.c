@@ -132,6 +132,33 @@ void update_val(graph_p G, unsigned long *dist1,unsigned long *dist2)
     }
 }
 
+void traitement(list* sentinel, int nb_comp)
+{
+    unsigned long *din = calloc(nb_comp + 2, sizeof(unsigned long));
+    unsigned long *dout = calloc(nb_comp + 2, sizeof(unsigned long));
+    graph_p G = createGraph(nb_comp + 2);
+    graph_p Ginv = createGraph(nb_comp + 2);
+    build_from_list(sentinel, G, Ginv, dout, din);
+
+
+    unsigned long *dist1 = calloc(G->num_vertices, sizeof(unsigned long));
+    Bellman(G, 0, din, dist1);
+
+    unsigned long *dist2 = calloc(G->num_vertices, sizeof(unsigned long));
+    Bellman(Ginv, nb_comp+1, dout, dist2);
+
+    update_val(G,dist1,dist2);
+
+    print_graph(G);
+
+    free(dist1);
+    free(dist2);
+    free(din);
+    free(dout);
+    destroyGraph(G);
+    destroyGraph(Ginv);
+}
+
 void print_graph(graph_p G)
 {
     for(int i = 0; i < G->num_vertices; i++)

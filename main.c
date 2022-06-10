@@ -222,32 +222,7 @@ int main()
     temp->next = new_c;
 
     int nb_comp = 12;
-
-    unsigned long *din = calloc(nb_comp + 2, sizeof(unsigned long));
-    unsigned long *dout = calloc(nb_comp + 2, sizeof(unsigned long));
-    graph_p G = createGraph(nb_comp + 2);
-    graph_p Ginv = createGraph(nb_comp + 2);
-    build_from_list(sentinel, G, Ginv, dout, din);
-
-
-    unsigned long *dist1 = calloc(G->num_vertices, sizeof(unsigned long));
-    Bellman(G, 0, din, dist1);
-
-    unsigned long *dist2 = calloc(G->num_vertices, sizeof(unsigned long));
-    Bellman(Ginv, nb_comp+1, dout, dist2);
-
-    update_val(G,dist1,dist2);
-
-    
-
-    print_graph(G);
-
-    free(dist1);
-    free(dist2);
-    free(din);
-    free(dout);
-    destroyGraph(G);
-    destroyGraph(Ginv);
+    traitement(sentinel,nb_comp);
 
     new_c = sentinel->next;
     for (list* it = sentinel->next; it != NULL; )
