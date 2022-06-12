@@ -35,18 +35,18 @@ char *build_query(const char *host, size_t *len)
 
 void connexion(int* fd, char** username, char** password)
 {
-	u_len = strlen(*username);
-	p_len = strlen(*password);
+	int u_len = strlen(*username);
+	int p_len = strlen(*password);
 
-	write(fd, 0, 1);
-	write(fd, u_len, 16);
-	write(fd, *username, u_len);
-	write(fd, p_len, 16);
-	write(fd, *password, p_len);
+	write(*fd, 0, 1);
+	write(*fd, &u_len, 16);
+	write(*fd, *username, u_len);
+	write(*fd, &p_len, 16);
+	write(*fd, *password, p_len);
 
-	char* ret;
+	int ret;
 
-	read(fd, ret, 1);
+	read(*fd, &ret, 1);
 
 	if (ret == 0) {
 		printf("Connected - Username : %s\n", *username);
@@ -57,7 +57,7 @@ void connexion(int* fd, char** username, char** password)
 	}
 }
 
-void print_page(char* path, char* name)
+void print_page(char* username, char* password)
 {
 
 	// Declare and initialize hints
@@ -98,12 +98,6 @@ void print_page(char* path, char* name)
 	if (!p)
 		errx(EXIT_FAILURE, "Couldn't connect");
 
-	// Send name Size
-	printf("Sending Name Size\n");
-	int n_size = strlen(name);
-	write(sfd, &n_size, sizeof(n_size));
-	printf("Name Size = %d\n", n_size);
-
 	/*
 
 	// Send Name
@@ -137,19 +131,19 @@ void print_page(char* path, char* name)
 	*/
 
 	if (action == 0) {
-		connexion();
+		connexion(&sfd, &username, &password);
 	}
 
 	else if (action == 1) {
-		send_image(&image);
+		//send_image(&image);
 	}
 
 	else if (action == 2) {
-		get_images();
+		//get_images();
 	}
 
 	else if (action == 3) {
-		get_image(number);
+		//get_image(number);
 	}
 
 	close(sfd);
