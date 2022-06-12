@@ -7,6 +7,7 @@
 #include <netdb.h>
 #include <string.h>
 #include <unistd.h>
+#include <sqlite3.h>
 #include "shared_queue.h"
 
 // Number of threads.
@@ -45,6 +46,22 @@ void echo(int fd_in, int fd_out)
 	}
 }
 
+void login(void* data, char** argv)
+{
+	*(data[0])++;
+	if (!strcmp(data[1], argv[0]))
+	{
+		// Bon mot de passe
+		write(*(data[2]), 0, 1);
+	}
+
+	else
+	{
+		// Mauvais mot de passe
+		write(*(data[2]), 1, 1);
+	}
+}
+
 // Function executed by the threads.
 void* worker(void* arg)
 {
@@ -54,6 +71,59 @@ void* worker(void* arg)
 	while (1)
 	{
 		int sock = shared_queue_pop(queue);
+
+		int action;
+		read(sock, &action, 1);
+
+		// Connection
+		if (action == 0)
+		{
+			int u_len, p_len;
+
+			read(sock, &u_len, 16);
+			char* username = calloc(u_len, 1);
+			if (!username)
+				errx(EXIT_FAILURE, "calloc()\n");
+			read(sock, &username, u_len);
+
+			read(sock, &p_len, 16);
+			char* password = calloc(p_len, 1);
+			if (!password)
+				errx(EXIT_FAILURE, "calloc()\n");
+			read(sock, &password, p_len);
+
+			// DataBase
+			sqlite3 *db;
+			int rc;
+
+			rc = sqlite3_open("../SeumesterAbroad.db", &db);
+			if (rc)
+				errx(EXIT_FAILURE, "Couldn't open database\n");
+
+			// SQL Statement
+			int* num_result = 0;
+
+			int len = u_len + 44;
+			char* query = calloc(len, 1);
+			if (!query)
+				errx(EXIT_FAILURE, "caaloc()\n");
+			sprintf(query, "SELECT PASSWORD FROM users WHERE USERNAME = %s", username);
+
+			void** data = [(void *)num_result, (void *)password, (void *)&sock];
+
+			rc = sqlite3_exec(db, query, login, data, NULL);
+
+			if (*num_result == 0) {
+				int len_bis = 32 + u_len + p_len;
+				char* add = calloc(len_bis, 1);
+				sprintf(add, "INSERT INTO users VALUES (%s, %s, 0)", username, password);
+				rc = sqlite3_exec(db, add, NULL, NULL, NULL);
+			}
+
+			sqlite3_close(db);
+		}
+
+		/*
 
 		// Read Name Size
 		printf("Reading Name Size\n");
@@ -108,6 +178,8 @@ void* worker(void* arg)
 		free(p_path);
 		fclose(image);
 		close(sock);
+
+		*/
 	}
 }
 
