@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra
-LDLIBS = -pthread -fsanitize=address
+LDLIBS = -pthread -fsanitize=address -l sqlite3
 
 all: server
 

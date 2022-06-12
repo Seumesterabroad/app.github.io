@@ -20,6 +20,12 @@ const size_t BUFFER_SIZE = 256;
 char path[] = "./graph_pic/graph_";
 char extension_BMP[] = ".bmp";
 
+struct login_data {
+	int fd;
+	char** password;
+	int* number;
+};
+
 void rewrite(int fd, const void *buf, size_t count)
 {
 	ssize_t written = 0;
@@ -46,20 +52,24 @@ void echo(int fd_in, int fd_out)
 	}
 }
 
-void login(void* data, char** argv)
+int login(void* data, int argc, char** argv, char** colsName)
 {
-	*(data[0])++;
-	if (!strcmp(data[1], argv[0]))
+	(void) argc;
+	(void) colsName;
+	struct login_data* login_data = (struct login_data *)data;
+	*(login_data->number) = *(login_data->number) + 1;
+	if (!strcmp(*(login_data->password), argv[0]))
 	{
 		// Bon mot de passe
-		write(*(data[2]), 0, 1);
+		write(login_data->fd, 0, 1);
 	}
 
 	else
 	{
 		// Mauvais mot de passe
-		write(*(data[2]), 1, 1);
+		write(login_data->fd, (char *)1, 1);
 	}
+	return 0;
 }
 
 // Function executed by the threads.
@@ -106,16 +116,20 @@ void* worker(void* arg)
 			int len = u_len + 44;
 			char* query = calloc(len, 1);
 			if (!query)
-				errx(EXIT_FAILURE, "caaloc()\n");
+				errx(EXIT_FAILURE, "calloc()\n");
 			sprintf(query, "SELECT PASSWORD FROM users WHERE USERNAME = %s", username);
 
-			void** data = [(void *)num_result, (void *)password, (void *)&sock];
+			struct login_data* data = calloc(sizeof(*data), 1);
+			if (!data)
+				errx(EXIT_FAILURE, "calloc()\n");
 
-			rc = sqlite3_exec(db, query, login, data, NULL);
+			rc = sqlite3_exec(db, query, login, (void *)data, NULL);
 
 			if (*num_result == 0) {
 				int len_bis = 32 + u_len + p_len;
 				char* add = calloc(len_bis, 1);
+				if (!add)
+					errx(EXIT_FAILURE, "calloc()\n");
 				sprintf(add, "INSERT INTO users VALUES (%s, %s, 0)", username, password);
 				rc = sqlite3_exec(db, add, NULL, NULL, NULL);
 			}
