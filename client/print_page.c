@@ -8,6 +8,7 @@
 #include <unistd.h>
 
 const size_t BUFFER_SIZE = 32;
+int action;
 
 void rewrite(int fd, const void *buf, size_t count)
 {
@@ -30,6 +31,30 @@ char *build_query(const char *host, size_t *len)
 
 	*len = r;
 	return req;
+}
+
+void connexion(int* fd, char** username, char** password)
+{
+	u_len = strlen(*username);
+	p_len = strlen(*password);
+
+	write(fd, 0, 1);
+	write(fd, u_len, 16);
+	write(fd, *username, u_len);
+	write(fd, p_len, 16);
+	write(fd, *password, p_len);
+
+	char* ret;
+
+	read(fd, ret, 1);
+
+	if (ret == 0) {
+		printf("Connected - Username : %s\n", *username);
+	}
+
+	else {
+		printf("Wrong password !");
+	}
 }
 
 void print_page(char* path, char* name)
@@ -79,6 +104,8 @@ void print_page(char* path, char* name)
 	write(sfd, &n_size, sizeof(n_size));
 	printf("Name Size = %d\n", n_size);
 
+	/*
+
 	// Send Name
 	printf("Sending Name\n");
 	write(sfd, name, n_size);
@@ -105,6 +132,24 @@ void print_page(char* path, char* name)
 		fread(pic_buffer, 1, sizeof(pic_buffer), picture);
 		write(sfd, pic_buffer, sizeof(pic_buffer));
 		bzero(pic_buffer, sizeof(pic_buffer));
+	}
+
+	*/
+
+	if (action == 0) {
+		connexion();
+	}
+
+	else if (action == 1) {
+		send_image(&image);
+	}
+
+	else if (action == 2) {
+		get_images();
+	}
+
+	else if (action == 3) {
+		get_image(number);
 	}
 
 	close(sfd);
