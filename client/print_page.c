@@ -8,7 +8,7 @@
 #include <unistd.h>
 
 const size_t BUFFER_SIZE = 32;
-int action;
+int action = 0;
 
 void rewrite(int fd, const void *buf, size_t count)
 {
@@ -35,6 +35,8 @@ char *build_query(const char *host, size_t *len)
 
 void connexion(int* fd, char** username, char** password)
 {
+	printf("Entered connexion\n");
+
 	int u_len = strlen(*username);
 	int p_len = strlen(*password);
 
