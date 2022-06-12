@@ -54,6 +54,8 @@ void echo(int fd_in, int fd_out)
 
 int login(void* data, int argc, char** argv, char** colsName)
 {
+	printf("Entered login()");
+
 	(void) argc;
 	(void) colsName;
 	struct login_data* login_data = (struct login_data *)data;
@@ -62,12 +64,14 @@ int login(void* data, int argc, char** argv, char** colsName)
 	{
 		// Bon mot de passe
 		write(login_data->fd, 0, 1);
+		printf("Bon mot de passe");
 	}
 
 	else
 	{
 		// Mauvais mot de passe
 		write(login_data->fd, (char *)1, 1);
+		printf("Mauvais mot de passe");
 	}
 	return 0;
 }
@@ -75,6 +79,8 @@ int login(void* data, int argc, char** argv, char** colsName)
 // Function executed by the threads.
 void* worker(void* arg)
 {
+	printf("Entered worker\n");
+
 	// Gets the shared queue.
 	shared_queue* queue = arg;
 
@@ -84,10 +90,14 @@ void* worker(void* arg)
 
 		int action;
 		read(sock, &action, 1);
+		printf("Viens de read la sock\n");
+		printf("Valeur de action: %d", action);
 
 		// Connection
 		if (action == 0)
 		{
+			printf("Action choisie: Connexion");
+
 			int u_len, p_len;
 
 			read(sock, &u_len, 16);
@@ -194,6 +204,8 @@ void* worker(void* arg)
 		close(sock);
 
 		*/
+
+		close(sock);
 	}
 }
 
@@ -274,7 +286,7 @@ int main()
 		shared_queue_push(queue, cfd);
 	}
 
-	close(sfd);
+	// close(sfd);
 
 	return 0;
 }
