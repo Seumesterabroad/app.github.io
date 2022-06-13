@@ -6,6 +6,10 @@
 #include <stdlib.h>
 #include <err.h>
 #include "string.h"
+#include "SDL/SDL.h"
+#include "SDL/SDL_image.h"
+#include "pixel_operations.h"
+#include "SDL/SDL_ttf.h"
 
 
 /* Adjacency list node*/

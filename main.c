@@ -2,6 +2,8 @@
 #include "parser.h"
 #include "graph_operation.h"
 #include "graph_processing.h"
+#include "construction.h"
+
 
 int main()
 {
@@ -57,7 +59,7 @@ int main()
     {
       .anterio = NULL,
       .duree = 30,
-      .name = "Réservations",
+      .name = "Reservations",
       .index = 7
     };
 
@@ -89,7 +91,7 @@ int main()
     {
       .anterio = NULL,
       .duree = 7,
-      .name = "Décoration",
+      .name = "Decoration",
       .index = 11
     };
 
@@ -222,7 +224,12 @@ int main()
     temp->next = new_c;
 
     int nb_comp = 12;
-    traitement(sentinel,nb_comp);
+    graph_p G = traitement(sentinel,nb_comp);
+
+    SDL_Surface* res =  create(nb_comp,G);
+    SDL_SaveBMP(res, "test.bmp");
+
+    SDL_FreeSurface(res);
 
     new_c = sentinel->next;
     for (list* it = sentinel->next; it != NULL; )
