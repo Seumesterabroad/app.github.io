@@ -132,7 +132,7 @@ void update_val(graph_p G, unsigned long *dist1,unsigned long *dist2)
     }
 }
 
-void traitement(list* sentinel, int nb_comp)
+graph_p traitement(list* sentinel, int nb_comp)
 {
     unsigned long *din = calloc(nb_comp + 2, sizeof(unsigned long));
     unsigned long *dout = calloc(nb_comp + 2, sizeof(unsigned long));
@@ -155,8 +155,8 @@ void traitement(list* sentinel, int nb_comp)
     free(dist2);
     free(din);
     free(dout);
-    destroyGraph(G);
     destroyGraph(Ginv);
+    return G;
 }
 
 void print_graph(graph_p G)
