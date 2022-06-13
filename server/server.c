@@ -23,7 +23,7 @@ char extension_BMP[] = ".bmp";
 struct login_data {
 	int fd;
 	char** password;
-	int* number;
+	int number;
 };
 
 void rewrite(int fd, const void *buf, size_t count)
@@ -54,23 +54,25 @@ void echo(int fd_in, int fd_out)
 
 int login(void* data, int argc, char** argv, char** colsName)
 {
-	printf("Entered login()");
+	printf("Entered login()\n");
 
 	(void) argc;
 	(void) colsName;
 	struct login_data* login_data = (struct login_data *)data;
-	*(login_data->number) = *(login_data->number) + 1;
+	login_data->number ++;
 	if (!strcmp(*(login_data->password), argv[0]))
 	{
 		// Bon mot de passe
-		write(login_data->fd, 0, 1);
+		int k = 0;
+		write(login_data->fd, &k, 1);
 		printf("Bon mot de passe");
 	}
 
 	else
 	{
 		// Mauvais mot de passe
-		write(login_data->fd, (char *)1, 1);
+		int k = 1;
+		write(login_data->fd, &k, 1);
 		printf("Mauvais mot de passe");
 	}
 	return 0;
@@ -88,29 +90,33 @@ void* worker(void* arg)
 	{
 		int sock = shared_queue_pop(queue);
 
-		int action;
+		int action = 0;
 		read(sock, &action, 1);
 		printf("Viens de read la sock\n");
-		printf("Valeur de action: %d", action);
+		printf("Valeur de action: %d\n", action);
 
 		// Connection
 		if (action == 0)
 		{
-			printf("Action choisie: Connexion");
+			printf("Action choisie: Connexion\n");
 
-			int u_len, p_len;
+			int u_len = 0, p_len = 0;
 
+			printf("About to read u_len\n");
 			read(sock, &u_len, 16);
-			char* username = calloc(u_len, 1);
+			printf("Read u_len = %d\n", u_len);
+			char* username = calloc(u_len + 1, 1);
 			if (!username)
 				errx(EXIT_FAILURE, "calloc()\n");
-			read(sock, &username, u_len);
+			printf("About to read username\n");
+			read(sock, username, u_len);
+			printf("Read username = %s\n", username);
 
 			read(sock, &p_len, 16);
-			char* password = calloc(p_len, 1);
+			char* password = calloc(p_len + 1, 1);
 			if (!password)
 				errx(EXIT_FAILURE, "calloc()\n");
-			read(sock, &password, p_len);
+			read(sock, password, p_len);
 
 			// DataBase
 			sqlite3 *db;
@@ -121,26 +127,28 @@ void* worker(void* arg)
 				errx(EXIT_FAILURE, "Couldn't open database\n");
 
 			// SQL Statement
-			int* num_result = 0;
-
-			int len = u_len + 44;
+			int len = u_len + 47;
 			char* query = calloc(len, 1);
 			if (!query)
 				errx(EXIT_FAILURE, "calloc()\n");
-			sprintf(query, "SELECT PASSWORD FROM users WHERE USERNAME = %s", username);
+			sprintf(query, "SELECT PASSWORD FROM users WHERE USERNAME = '%s'", username);
 
 			struct login_data* data = calloc(sizeof(*data), 1);
 			if (!data)
 				errx(EXIT_FAILURE, "calloc()\n");
+			data->password = &password;
+			data->fd = sock;
+			data->number = 0;
 
+			printf("Before callin sqlite3_exec() (with login)\n");
 			rc = sqlite3_exec(db, query, login, (void *)data, NULL);
 
-			if (*num_result == 0) {
-				int len_bis = 32 + u_len + p_len;
+			if (data->number == 0) {
+				int len_bis = 68 + u_len + p_len;
 				char* add = calloc(len_bis, 1);
 				if (!add)
 					errx(EXIT_FAILURE, "calloc()\n");
-				sprintf(add, "INSERT INTO users VALUES (%s, %s, 0)", username, password);
+				sprintf(add, "INSERT INTO users(USERNAME, PASSWORD, NB_IMAGES) VALUES ('%s', '%s', 0)", username, password);
 				rc = sqlite3_exec(db, add, NULL, NULL, NULL);
 			}
 
