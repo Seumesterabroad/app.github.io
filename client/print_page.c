@@ -39,14 +39,19 @@ void connexion(int* fd, char** username, char** password)
 
 	int u_len = strlen(*username);
 	int p_len = strlen(*password);
+	
+	int k = 0;
 
-	write(*fd, 0, 1);
+	write(*fd, &k, 1);
 	write(*fd, &u_len, 16);
+	printf("u_len sent OK\n");
+	printf("username = %s\n", *username);
 	write(*fd, *username, u_len);
+	printf("username sent OK\n");
 	write(*fd, &p_len, 16);
 	write(*fd, *password, p_len);
 
-	int ret;
+	int ret = 0;
 
 	read(*fd, &ret, 1);
 
