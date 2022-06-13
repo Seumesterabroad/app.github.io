@@ -64,6 +64,41 @@ void connexion(int* fd, char** username, char** password)
 	}
 }
 
+void send_image(int* fd, char** username, char** path)
+{
+	// Send code 1
+	int k = 1;
+	write(*fd, &k, 1);
+
+	//Send username and its length
+	write(*fd, strlen(*username), 16);
+	write(*fd, *username, strlen(*username));
+
+	// Get Picture Size
+	printf("Getting Picture Size\n");
+	FILE *picture;
+	picture = fopen(*path, "r");
+	int p_size;
+	fseek(picture, 0, SEEK_END);
+	p_size = ftell(picture);
+	printf("Size = %d\n", p_size);
+	fseek(picture, 0, SEEK_SET);
+
+	// Send Picture Size
+	printf("Sending Picture Size\n");
+	write(*fd, &p_size, sizeof(p_size));
+
+	// Send Picture as Byte Array
+	printf("Sending Picture as Byte Array\n");
+	char pic_buffer[p_size];
+	while(!feof(picture))
+	{
+		fread(pic_buffer, 1, sizeof(pic_buffer), picture);
+		write(*fd, pic_buffer, sizeof(pic_buffer));
+		bzero(pic_buffer, sizeof(pic_buffer));
+	}
+}
+
 void print_page(char* username, char* password)
 {
 
@@ -105,44 +140,12 @@ void print_page(char* username, char* password)
 	if (!p)
 		errx(EXIT_FAILURE, "Couldn't connect");
 
-	/*
-
-	// Send Name
-	printf("Sending Name\n");
-	write(sfd, name, n_size);
-
-	// Get Picture Size
-	printf("Getting Picture Size\n");
-	FILE *picture;
-	picture = fopen(path, "r");
-	int p_size;
-	fseek(picture, 0, SEEK_END);
-	p_size = ftell(picture);
-	printf("Size = %d\n", p_size);
-	fseek(picture, 0, SEEK_SET);
-
-	// Send Picture Size
-	printf("Sending Picture Size\n");
-	write(sfd, &p_size, sizeof(p_size));
-
-	// Send Picture as Byte Array
-	printf("Sending Picture as Byte Array\n");
-	char pic_buffer[p_size];
-	while(!feof(picture))
-	{
-		fread(pic_buffer, 1, sizeof(pic_buffer), picture);
-		write(sfd, pic_buffer, sizeof(pic_buffer));
-		bzero(pic_buffer, sizeof(pic_buffer));
-	}
-
-	*/
-
 	if (action == 0) {
 		connexion(&sfd, &username, &password);
 	}
 
 	else if (action == 1) {
-		//send_image(&image);
+		send_image(&sfd, &username, "example.bmp")
 	}
 
 	else if (action == 2) {
