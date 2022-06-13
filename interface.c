@@ -1,5 +1,12 @@
 #include "interface.h"
 
+enum {
+  COLUMN_INDEX,
+  COLUMN_NAME,
+  COLUMN_TIME,
+  N_COLUMNS
+};
+
 typedef struct Informations
 {
     GtkWindow* main_window;
@@ -95,7 +102,7 @@ void get_user (GtkButton *button, gpointer user_data)
     {
         info->nb_tot = nb_tot;
         gtk_widget_hide(GTK_WIDGET(info -> username_window));
-
+        gtk_widget_show(GTK_WIDGET(info->main_tree));
         gtk_widget_show(GTK_WIDGET(info -> main_number));
         gtk_widget_show(GTK_WIDGET(info -> main_new_comp));
         
@@ -293,7 +300,17 @@ void confirm_s(GtkButton *button, gpointer user_data)
         gtk_label_set_text(info->main_number,str);
         gtk_widget_hide(GTK_WIDGET(info->main_error));
     }
-    
+
+    //Ajout de la nouvelle data à la liste
+    GtkTreeIter iter;
+    gtk_list_store_append (info->list, &iter);
+    gtk_list_store_set (info->list, &iter,
+                        COLUMN_INDEX, info->nb,
+                        COLUMN_NAME, donnee->name,
+                        COLUMN_TIME,  duree,
+                        -1);
+
+    //Fermeture
     sub_close(info->sub_cancel,user_data);
 }
 
@@ -341,8 +358,44 @@ int main()
     GtkLabel* main_error = GTK_LABEL(gtk_builder_get_object(builder, "main_error"));
 
     GtkTreeView* main_tree = GTK_TREE_VIEW(gtk_builder_get_object(builder, "main_tree"));
+    GtkTreeViewColumn *col;
+    GtkCellRenderer *renderer;
+    //GtkWidget *main_tree = gtk_tree_view_new();
 
-    GtkListStore* lists = GTK_LIST_STORE(gtk_builder_get_object(builder, "list"));
+
+    /* --- Column #1 --- */
+
+    renderer = gtk_cell_renderer_text_new();
+    col = gtk_tree_view_column_new_with_attributes("Index:",renderer, "text", COLUMN_INDEX, NULL);
+
+    /* pack tree view column into tree view */
+    gtk_tree_view_append_column(GTK_TREE_VIEW(main_tree), col);
+
+
+
+    /* --- Column #2 --- */
+
+    renderer = gtk_cell_renderer_text_new();
+    col = gtk_tree_view_column_new_with_attributes("Nom:",renderer, "text", COLUMN_NAME, NULL);
+    /* pack tree view column into tree view */
+    gtk_tree_view_append_column(GTK_TREE_VIEW(main_tree), col);
+
+
+
+    /* --- Column #3 --- */
+
+    renderer = gtk_cell_renderer_text_new();
+    col = gtk_tree_view_column_new_with_attributes("Temps:",renderer, "text", COLUMN_TIME, NULL);
+
+
+    /* pack tree view column into tree view */
+    gtk_tree_view_append_column(GTK_TREE_VIEW(main_tree), col);
+
+
+    //GtkListStore* list = GTK_LIST_STORE(gtk_builder_get_object(builder, "list"));
+    GtkListStore* list = gtk_list_store_new(N_COLUMNS, G_TYPE_ULONG, G_TYPE_STRING, G_TYPE_ULONG);
+    
+    gtk_tree_view_set_model (main_tree, GTK_TREE_MODEL(list));
 
     Informations info = 
     {
@@ -372,7 +425,7 @@ int main()
 
         .main_tree = main_tree,
 
-        .list = lists,
+        .list = list,
 
         .nb = 0,
         .nb_tot = 0,
@@ -401,6 +454,7 @@ int main()
     g_object_unref(G_OBJECT(builder));
     gtk_widget_show(GTK_WIDGET(main_window));
     gtk_widget_hide(GTK_WIDGET(sub_window));
+    gtk_widget_hide(GTK_WIDGET(main_tree));
     gtk_widget_hide(GTK_WIDGET(username_window));
     gtk_widget_hide(GTK_WIDGET(result_window));
     gtk_widget_hide(GTK_WIDGET(main_number));
