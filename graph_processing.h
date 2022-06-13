@@ -20,6 +20,6 @@ void update_val(graph_p G, unsigned long *dist1,unsigned long *dist2);
 
 void print_graph(graph_p G);
 
-void traitement(list* sentinel, int nb_comp);
+graph_p traitement(list* sentinel, int nb_comp);
 
 #endif
