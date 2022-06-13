@@ -2,14 +2,6 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkListStore" id="list">
-    <columns>
-      <!-- column-name Nom: -->
-      <column type="gchararray"/>
-      <!-- column-name Index: -->
-      <column type="gulong"/>
-    </columns>
-  </object>
   <object class="GtkWindow" id="org.gtk.main_window">
     <property name="can_focus">False</property>
     <property name="window_position">center</property>
@@ -128,21 +120,6 @@ Diagramme Pert</property>
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="main_new_comp">
-                <property name="label" translatable="yes">Nouvelle composante</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="margin_bottom">15</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="pack_type">end</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkLabel" id="main_error">
                 <property name="can_focus">False</property>
                 <property name="margin_top">20</property>
@@ -164,6 +141,21 @@ cette nouvelle composante !</property>
                 <property name="position">2</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkButton" id="main_new_comp">
+                <property name="label" translatable="yes">Nouvelle composante</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="margin_bottom">15</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="pack_type">end</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -175,15 +167,27 @@ cette nouvelle composante !</property>
           <object class="GtkTreeView" id="main_tree">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="model">list</property>
+            <property name="enable_grid_lines">both</property>
             <child internal-child="selection">
               <object class="GtkTreeSelection"/>
             </child>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkScrollbar" id="scroll">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="orientation">vertical</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
           </packing>
         </child>
       </object>

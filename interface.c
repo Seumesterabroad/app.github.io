@@ -37,6 +37,8 @@ typedef struct Informations
 
     GtkTreeView* main_tree;
 
+    GtkScrollbar* scroll;
+
     GtkListStore* list;   
 
     unsigned long nb;
@@ -103,6 +105,7 @@ void get_user (GtkButton *button, gpointer user_data)
         info->nb_tot = nb_tot;
         gtk_widget_hide(GTK_WIDGET(info -> username_window));
         gtk_widget_show(GTK_WIDGET(info->main_tree));
+        gtk_widget_show(GTK_WIDGET(info->scroll));
         gtk_widget_show(GTK_WIDGET(info -> main_number));
         gtk_widget_show(GTK_WIDGET(info -> main_new_comp));
         
@@ -357,6 +360,8 @@ int main()
     GtkLabel* username_error = GTK_LABEL(gtk_builder_get_object(builder, "username_error"));
     GtkLabel* main_error = GTK_LABEL(gtk_builder_get_object(builder, "main_error"));
 
+    GtkScrollbar* scroll = GTK_SCROLLBAR(gtk_builder_get_object(builder, "scroll"));
+
     GtkTreeView* main_tree = GTK_TREE_VIEW(gtk_builder_get_object(builder, "main_tree"));
     GtkTreeViewColumn *col;
     GtkCellRenderer *renderer;
@@ -425,6 +430,8 @@ int main()
 
         .main_tree = main_tree,
 
+        .scroll = scroll,
+
         .list = list,
 
         .nb = 0,
@@ -455,6 +462,7 @@ int main()
     gtk_widget_show(GTK_WIDGET(main_window));
     gtk_widget_hide(GTK_WIDGET(sub_window));
     gtk_widget_hide(GTK_WIDGET(main_tree));
+    gtk_widget_hide(GTK_WIDGET(scroll));
     gtk_widget_hide(GTK_WIDGET(username_window));
     gtk_widget_hide(GTK_WIDGET(result_window));
     gtk_widget_hide(GTK_WIDGET(main_number));
