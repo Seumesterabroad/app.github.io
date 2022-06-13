@@ -14,7 +14,9 @@ typedef struct Informations
     GtkWindow* username_window;
     GtkWindow* result_window;
 
+    GtkButton* main_start;
     GtkButton* main_new;
+    GtkButton* main_load;
     GtkButton* main_new_comp;
     GtkButton* sub_confirm;
     GtkButton* sub_cancel;
@@ -27,6 +29,7 @@ typedef struct Informations
     GtkEntry* sub_anterio;
     GtkEntry* nb_tot_comp;
     GtkEntry* username_get;
+    GtkEntry* mdp_entry;
 
     GtkLabel* main_number;
     GtkLabel* sub_index;
@@ -43,6 +46,9 @@ typedef struct Informations
     unsigned long nb_tot;
 
     char* username;
+    char* mdp;
+    char* path;
+    char* load;
 
     struct list *sentinel;
     
@@ -88,24 +94,95 @@ void get_user (GtkButton *button, gpointer user_data)
     (void)(button);
     Informations* info = user_data;
     info->username = (char *) gtk_entry_get_text(GTK_ENTRY(info->username_get));
+    info->mdp = (char *) gtk_entry_get_text(GTK_ENTRY(info->mdp_entry));
 
-    char* nb_to = (char *) gtk_entry_get_text(GTK_ENTRY(info->nb_tot_comp));
-    char* ptr;
-    unsigned long nb_tot = strtoul(nb_to,&ptr,0);
-
-    if (nb_tot == 0)
+    if (*info->username == '\0'||*info->username == ' '||connexion(/*fd*/,&info->username,&info->mdp) == 0)
     {
-        gtk_entry_set_text(GTK_ENTRY(info->nb_tot_comp),"");
+        gtk_entry_set_text(GTK_ENTRY(info->username_get),"");
+        gtk_entry_set_text(GTK_ENTRY(info->mdp_entry),"");
         gtk_widget_show(GTK_WIDGET(info->username_error));
     }
     else
     {
-        info->nb_tot = nb_tot;
         gtk_widget_hide(GTK_WIDGET(info -> username_window));
-        gtk_widget_show(GTK_WIDGET(info->main_tree));
+        gtk_widget_show(GTK_WIDGET(info -> main_new));
+        gtk_widget_show(GTK_WIDGET(info -> main_load));
+    }
+}
+
+void abort(GtkButton *button, gpointer user_data)
+{
+    (void)(button);
+    Informations* info = user_data;
+
+    gtk_widget_hide(GTK_WIDGET(info -> comp_window));
+    gtk_widget_hide(GTK_WIDGET(info -> load_window));
+    
+    gtk_entry_set_text(GTK_ENTRY(info->nb_tot_comp),"");
+    gtk_entry_set_text(GTK_ENTRY(info->load_entry),"");
+
+    gtk_widget_show(GTK_WIDGET(info -> main_new));
+    gtk_widget_show(GTK_WIDGET(info -> main_load)); 
+}
+
+void load_fct(GtkButton *button, gpointer user_data)
+{
+    (void)(button);
+    Informations* info = user_data;
+    
+    info->load = (char *) gtk_entry_get_text(GTK_ENTRY(info->load_entry));
+
+    //TODO Faire un test savoir si la ref est connue
+    if (/* condition */)
+    {
+        gtk_entry_set_text(GTK_ENTRY(info->load_entry),"");
+        gtk_widget_show(GTK_WIDGET(info -> load_error)); 
+    }
+    else
+    {
+        gtk_widget_hide(GTK_WIDGET(info -> load_window));
+        //TODO Envoyer load dans fct anaïs puis fermer ui
+    }
+}
+
+void load(GtkButton *button, gpointer user_data)
+{
+    (void)(button);
+    Informations* info = user_data;
+    gtk_widget_hide(GTK_WIDGET(info -> main_new));
+    gtk_widget_hide(GTK_WIDGET(info -> main_load));
+    gtk_widget_show(GTK_WIDGET(info -> load_window));
+
+}
+
+void new_fct(GtkButton *button, gpointer user_data)
+{
+    (void)(button);
+    Informations* info = user_data;
+
+    char* nb_to = (char *) gtk_entry_get_text(GTK_ENTRY(info->nb_tot_comp));
+    char* ptr;
+    unsigned long nb_tot = strtoul(nb_to,&ptr,0);
+    if (nb_tot == 0)
+    {
+        gtk_entry_set_text(GTK_ENTRY(info->nb_tot_comp),"");
+        gtk_widget_show(GTK_WIDGET(info->comp_error));
+    }
+    else
+    {
+        info->nb_tot = nb_tot;
+        
+        gtk_widget_hide(GTK_WIDGET(info -> comp_window));
+        gtk_widget_show(GTK_WIDGET(info -> scroll));
+        gtk_widget_show(GTK_WIDGET(info -> main_tree));
         gtk_widget_show(GTK_WIDGET(info -> main_number));
         gtk_widget_show(GTK_WIDGET(info -> main_new_comp));
-        
+
+        list* senti = malloc(sizeof(list));
+        senti->data_pert = NULL;
+        senti->next = NULL;
+    
+        info->sentinel = senti;
     }
 }
 
@@ -113,13 +190,17 @@ void new(GtkButton *button, gpointer user_data)
 {
     (void)(button);
     Informations* info = user_data;
+    gtk_widget_show(GTK_WIDGET(info -> comp_window));
     gtk_widget_hide(GTK_WIDGET(info -> main_new));
+    gtk_widget_hide(GTK_WIDGET(info -> main_load));    
+}
+
+void start(GtkButton *button, gpointer user_data)
+{
+    (void)(button);
+    Informations* info = user_data;
+    gtk_widget_hide(GTK_WIDGET(info -> main_start));
     gtk_widget_show(GTK_WIDGET(info -> username_window));
-    list* senti = malloc(sizeof(list));
-    senti->data_pert = NULL;
-    senti->next = NULL;
-    
-    info->sentinel = senti;
 }
 
 void new_comp(GtkButton *button, gpointer user_data)
@@ -358,6 +439,8 @@ int main()
     GtkWindow* username_window = GTK_WINDOW(gtk_builder_get_object(builder, "org.gtk.username"));
     GtkWindow* result_window = GTK_WINDOW(gtk_builder_get_object(builder, "org.gtk.result"));
 
+    GtkButton* main_start = GTK_BUTTON(gtk_builder_get_object(builder, "main_start"));    
+    GtkButton* main_load = GTK_BUTTON(gtk_builder_get_object(builder, "main_load"));
     GtkButton* main_new = GTK_BUTTON(gtk_builder_get_object(builder, "main_new"));
     GtkButton* main_new_comp = GTK_BUTTON(gtk_builder_get_object(builder, "main_new_comp"));
     GtkButton* sub_confirm = GTK_BUTTON(gtk_builder_get_object(builder, "sub_confirm"));
@@ -371,6 +454,7 @@ int main()
     GtkEntry* username_get = GTK_ENTRY(gtk_builder_get_object(builder, "username_get"));
     GtkEntry* sub_duree = GTK_ENTRY(gtk_builder_get_object(builder, "sub_duree"));
     GtkEntry* sub_anterio = GTK_ENTRY(gtk_builder_get_object(builder, "sub_anterio"));
+    GtkEntry* mdp_entry = GTK_ENTRY(gtk_builder_get_object(builder, "mdp_entry"));
 
     GtkLabel* main_number = GTK_LABEL(gtk_builder_get_object(builder, "main_number"));
     GtkLabel* sub_index = GTK_LABEL(gtk_builder_get_object(builder, "sub_index"));
@@ -380,7 +464,6 @@ int main()
     GtkTreeView* main_tree = GTK_TREE_VIEW(gtk_builder_get_object(builder, "main_tree"));
     GtkTreeViewColumn *col;
     GtkCellRenderer *renderer;
-    //GtkWidget *main_tree = gtk_tree_view_new();
 
 
     /* --- Column #1 --- */
@@ -405,7 +488,7 @@ int main()
     /* --- Column #3 --- */
 
     renderer = gtk_cell_renderer_text_new();
-    col = gtk_tree_view_column_new_with_attributes("Temps:",renderer, "text", COLUMN_TIME, NULL);
+    col = gtk_tree_view_column_new_with_attributes("Durée:",renderer, "text", COLUMN_TIME, NULL);
 
 
     /* pack tree view column into tree view */
@@ -425,6 +508,8 @@ int main()
         .username_window = username_window,
         .result_window = result_window,
 
+        .main_start = main_start,
+        .main_load = main_load,
         .main_new = main_new,
         .main_new_comp = main_new_comp,
         .sub_confirm = sub_confirm,
@@ -438,6 +523,7 @@ int main()
         .sub_anterio = sub_anterio,
         .nb_tot_comp = nb_tot_comp,
         .username_get = username_get,
+        .mdp_entry = mdp_entry,
 
         .main_number = main_number,
         .sub_index = sub_index,
@@ -454,6 +540,9 @@ int main()
         .image = NULL,
 
         .username = NULL,
+        .mdp = NULL,
+        .path = NULL,
+        .load = NULL,
 
         .sentinel = NULL,
     };
@@ -463,7 +552,10 @@ int main()
     g_signal_connect(sub_window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     g_signal_connect(username_window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     g_signal_connect(result_window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-    g_signal_connect(main_new, "clicked", G_CALLBACK(new),&info);
+
+    g_signal_connect(main_start, "clicked", G_CALLBACK(start),&info);        
+    g_signal_connect(main_load, "clicked", G_CALLBACK(load_fct),&info);    
+    g_signal_connect(main_new, "clicked", G_CALLBACK(/*********************/),&info);
     g_signal_connect(main_new_comp, "clicked", G_CALLBACK(new_comp),&info);
     g_signal_connect(result_save, "clicked", G_CALLBACK(save),&info);
     g_signal_connect(sub_confirm, "clicked", G_CALLBACK(confirm_s), &info);
