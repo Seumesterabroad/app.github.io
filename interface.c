@@ -382,6 +382,7 @@ int main()
     GtkCellRenderer *renderer;
     //GtkWidget *main_tree = gtk_tree_view_new();
 
+
     /* --- Column #1 --- */
 
     renderer = gtk_cell_renderer_text_new();
@@ -462,7 +463,6 @@ int main()
     g_signal_connect(sub_window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     g_signal_connect(username_window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     g_signal_connect(result_window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-
     g_signal_connect(main_new, "clicked", G_CALLBACK(new),&info);
     g_signal_connect(main_new_comp, "clicked", G_CALLBACK(new_comp),&info);
     g_signal_connect(result_save, "clicked", G_CALLBACK(save),&info);
