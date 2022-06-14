@@ -171,6 +171,27 @@ void get_images(int *fd, char **username)
     }
 }
 
+char* parseur(char* str)
+{
+    size_t slash = 0;
+    size_t i = 0;
+    while (*(str + slash + i) != '\0')
+    {
+        i++;
+        if (*(str+slash+i) == '/')
+        {
+            slash += i;
+            i=1;
+        }
+    }
+    char* res = malloc(sizeof(char));
+    for (size_t temp = 0; temp < i; temp ++)
+    {
+        *(res + temp) = *(str + slash + temp + 1);
+    }
+    return res;
+}
+
 int get_image(int *fd, char **username, char **name_im, char **path_im)
 {
     // Send code 3
