@@ -13,6 +13,8 @@ typedef struct Informations
     GtkWindow* sub_window;
     GtkWindow* username_window;
     GtkWindow* result_window;
+    GtkWindow* load_window;
+    GtkWindow* comp_window;
 
     GtkButton* main_start;
     GtkButton* main_new;
@@ -23,6 +25,11 @@ typedef struct Informations
     GtkButton* main_confirm;
     GtkButton* result_save;
     GtkButton* username_confirm;
+    GtkButton* comp_confirm;
+    GtkButton* comp_cancel;
+    GtkButton* load_confirm;
+    GtkButton* load_cancel;
+
 
     GtkEntry* sub_nom;
     GtkEntry* sub_duree;
@@ -30,17 +37,22 @@ typedef struct Informations
     GtkEntry* nb_tot_comp;
     GtkEntry* username_get;
     GtkEntry* mdp_entry;
+    GtkEntry* load_entry;
 
     GtkLabel* main_number;
     GtkLabel* sub_index;
     GtkLabel* username_error;
     GtkLabel* main_error;
+    GtkLabel* load_error;
+    GtkLabel* comp_error;
 
     SDL_Surface* image;
 
     GtkTreeView* main_tree;
 
     GtkListStore* list;   
+
+    GtkScrollbar* scroll;
 
     unsigned long nb;
     unsigned long nb_tot;
@@ -96,7 +108,7 @@ void get_user (GtkButton *button, gpointer user_data)
     info->username = (char *) gtk_entry_get_text(GTK_ENTRY(info->username_get));
     info->mdp = (char *) gtk_entry_get_text(GTK_ENTRY(info->mdp_entry));
 
-    if (*info->username == '\0'||*info->username == ' '||connexion(/*fd*/,&info->username,&info->mdp) == 0)
+    if (*info->username == '\0'||*info->username == ' ') /*||connexion(fd,&info->username,&info->mdp) == 0*/
     {
         gtk_entry_set_text(GTK_ENTRY(info->username_get),"");
         gtk_entry_set_text(GTK_ENTRY(info->mdp_entry),"");
@@ -110,7 +122,7 @@ void get_user (GtkButton *button, gpointer user_data)
     }
 }
 
-void abort(GtkButton *button, gpointer user_data)
+void abort_fct(GtkButton *button, gpointer user_data)
 {
     (void)(button);
     Informations* info = user_data;
@@ -132,8 +144,9 @@ void load_fct(GtkButton *button, gpointer user_data)
     
     info->load = (char *) gtk_entry_get_text(GTK_ENTRY(info->load_entry));
 
-    //TODO Faire un test savoir si la ref est connue
-    if (/* condition */)
+    //TODO Faire un test savoir si la ref est connue puis que faire ? fermer ?
+    /*
+    if ( condition )
     {
         gtk_entry_set_text(GTK_ENTRY(info->load_entry),"");
         gtk_widget_show(GTK_WIDGET(info -> load_error)); 
@@ -143,6 +156,9 @@ void load_fct(GtkButton *button, gpointer user_data)
         gtk_widget_hide(GTK_WIDGET(info -> load_window));
         //TODO Envoyer load dans fct anaïs puis fermer ui
     }
+    */
+
+
 }
 
 void load(GtkButton *button, gpointer user_data)
@@ -438,6 +454,8 @@ int main()
     GtkWindow* sub_window = GTK_WINDOW(gtk_builder_get_object(builder, "org.gtk.sub_window"));
     GtkWindow* username_window = GTK_WINDOW(gtk_builder_get_object(builder, "org.gtk.username"));
     GtkWindow* result_window = GTK_WINDOW(gtk_builder_get_object(builder, "org.gtk.result"));
+    GtkWindow* load_window = GTK_WINDOW(gtk_builder_get_object(builder, "org.gtk.load"));
+    GtkWindow* comp_window = GTK_WINDOW(gtk_builder_get_object(builder, "org.gtk.comp"));
 
     GtkButton* main_start = GTK_BUTTON(gtk_builder_get_object(builder, "main_start"));    
     GtkButton* main_load = GTK_BUTTON(gtk_builder_get_object(builder, "main_load"));
@@ -448,6 +466,10 @@ int main()
     GtkButton* main_confirm = GTK_BUTTON(gtk_builder_get_object(builder, "main_confirm"));
     GtkButton* result_save = GTK_BUTTON(gtk_builder_get_object(builder, "result_save"));
     GtkButton* username_confirm = GTK_BUTTON(gtk_builder_get_object(builder, "username_confirm"));
+    GtkButton* load_confirm = GTK_BUTTON(gtk_builder_get_object(builder, "load_confirm"));
+    GtkButton* comp_confirm = GTK_BUTTON(gtk_builder_get_object(builder, "comp_confirm"));
+    GtkButton* load_cancel = GTK_BUTTON(gtk_builder_get_object(builder, "load_cancel"));
+    GtkButton* comp_cancel = GTK_BUTTON(gtk_builder_get_object(builder, "comp_cancel"));
 
     GtkEntry* sub_nom = GTK_ENTRY(gtk_builder_get_object(builder, "sub_nom"));
     GtkEntry* nb_tot_comp = GTK_ENTRY(gtk_builder_get_object(builder, "nb_tot_comp"));
@@ -455,11 +477,16 @@ int main()
     GtkEntry* sub_duree = GTK_ENTRY(gtk_builder_get_object(builder, "sub_duree"));
     GtkEntry* sub_anterio = GTK_ENTRY(gtk_builder_get_object(builder, "sub_anterio"));
     GtkEntry* mdp_entry = GTK_ENTRY(gtk_builder_get_object(builder, "mdp_entry"));
+    GtkEntry* load_entry = GTK_ENTRY(gtk_builder_get_object(builder, "load_entry"));
 
     GtkLabel* main_number = GTK_LABEL(gtk_builder_get_object(builder, "main_number"));
     GtkLabel* sub_index = GTK_LABEL(gtk_builder_get_object(builder, "sub_index"));
     GtkLabel* username_error = GTK_LABEL(gtk_builder_get_object(builder, "username_error"));
     GtkLabel* main_error = GTK_LABEL(gtk_builder_get_object(builder, "main_error"));
+    GtkLabel* load_error = GTK_LABEL(gtk_builder_get_object(builder, "load_error"));
+    GtkLabel* comp_error = GTK_LABEL(gtk_builder_get_object(builder, "comp_error"));
+
+    GtkScrollbar* scroll = GTK_SCROLLBAR(gtk_builder_get_object(builder, "scroll"));
 
     GtkTreeView* main_tree = GTK_TREE_VIEW(gtk_builder_get_object(builder, "main_tree"));
     GtkTreeViewColumn *col;
@@ -507,6 +534,8 @@ int main()
         .sub_window = sub_window,
         .username_window = username_window,
         .result_window = result_window,
+        .load_window = load_window,
+        .comp_window = comp_window,
 
         .main_start = main_start,
         .main_load = main_load,
@@ -517,6 +546,10 @@ int main()
         .main_confirm = main_confirm,
         .result_save = result_save,
         .username_confirm = username_confirm,
+        .comp_confirm = comp_confirm,
+        .comp_cancel = comp_cancel,
+        .load_confirm = load_confirm,
+        .load_cancel = load_cancel,
 
         .sub_nom = sub_nom,
         .sub_duree = sub_duree,
@@ -524,13 +557,18 @@ int main()
         .nb_tot_comp = nb_tot_comp,
         .username_get = username_get,
         .mdp_entry = mdp_entry,
+        .load_entry = load_entry,
 
         .main_number = main_number,
         .sub_index = sub_index,
         .username_error = username_error,
         .main_error = main_error,
+        .comp_error = comp_error,
+        .load_error = load_error,
 
         .main_tree = GTK_TREE_VIEW(main_tree),
+
+        .scroll = scroll,
 
         .list = list,
 
@@ -552,21 +590,30 @@ int main()
     g_signal_connect(sub_window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     g_signal_connect(username_window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
     g_signal_connect(result_window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    g_signal_connect(load_window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    g_signal_connect(comp_window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
     g_signal_connect(main_start, "clicked", G_CALLBACK(start),&info);        
-    g_signal_connect(main_load, "clicked", G_CALLBACK(load_fct),&info);    
-    g_signal_connect(main_new, "clicked", G_CALLBACK(/*********************/),&info);
+    g_signal_connect(main_load, "clicked", G_CALLBACK(load),&info);    
+    g_signal_connect(main_new, "clicked", G_CALLBACK(new),&info);
     g_signal_connect(main_new_comp, "clicked", G_CALLBACK(new_comp),&info);
     g_signal_connect(result_save, "clicked", G_CALLBACK(save),&info);
     g_signal_connect(sub_confirm, "clicked", G_CALLBACK(confirm_s), &info);
     g_signal_connect(sub_cancel, "clicked", G_CALLBACK(sub_close), &info);
     g_signal_connect(main_confirm, "clicked", G_CALLBACK(confirm_m), &info);
     g_signal_connect(username_confirm, "clicked", G_CALLBACK(get_user), &info);
+    g_signal_connect(load_confirm, "clicked", G_CALLBACK(load_fct), &info);
+    g_signal_connect(comp_confirm, "clicked", G_CALLBACK(new_fct), &info);
+    g_signal_connect(load_cancel, "clicked", G_CALLBACK(abort_fct), &info);
+    g_signal_connect(comp_cancel, "clicked", G_CALLBACK(abort_fct), &info);
 
     g_object_unref(G_OBJECT(builder));
     gtk_widget_show(GTK_WIDGET(main_window));
     gtk_widget_hide(GTK_WIDGET(sub_window));
     gtk_widget_hide(GTK_WIDGET(main_tree));
+    gtk_widget_hide(GTK_WIDGET(main_new));
+    gtk_widget_hide(GTK_WIDGET(main_load));
+    gtk_widget_hide(GTK_WIDGET(scroll));
     gtk_widget_hide(GTK_WIDGET(username_window));
     gtk_widget_hide(GTK_WIDGET(result_window));
     gtk_widget_hide(GTK_WIDGET(main_number));
