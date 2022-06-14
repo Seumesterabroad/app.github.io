@@ -3,6 +3,7 @@
 
 #include "graph.h"
 #include "graph_processing.h"
+#include "client/print_page.h"
 #include "construction.h"
 #include <gtk/gtk.h>
 #include <SDL/SDL.h>

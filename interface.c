@@ -74,6 +74,8 @@ void save(GtkButton *button, gpointer user_data)
     GtkFileChooser *chooser;
     GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
     gint res;
+    int fd = socket_connect();
+
 
     dialog = gtk_file_chooser_dialog_new ("Save File",
                                         info->result_window,
@@ -95,9 +97,10 @@ void save(GtkButton *button, gpointer user_data)
         char *filename;
         filename = gtk_file_chooser_get_filename (chooser);
         SDL_SaveBMP(info->image,filename);
+        send_image(&fd,&info->username,&filename);
         free(filename);
     }
-
+    socket_close(fd);
     gtk_widget_destroy (dialog);
 }
 
@@ -107,10 +110,10 @@ void get_user (GtkButton *button, gpointer user_data)
     Informations* info = user_data;
     info->username = (char *) gtk_entry_get_text(GTK_ENTRY(info->username_get));
     info->mdp = (char *) gtk_entry_get_text(GTK_ENTRY(info->mdp_entry));
+    int fd = socket_connect();
 
-    if (*info->username == '\0'||*info->username == ' ') /*||connexion(fd,&info->username,&info->mdp) == 0*/
+    if (*info->username == '\0'||*info->username == ' '||connexion(&fd,&info->username,&info->mdp) != 0)
     {
-        gtk_entry_set_text(GTK_ENTRY(info->username_get),"");
         gtk_entry_set_text(GTK_ENTRY(info->mdp_entry),"");
         gtk_widget_show(GTK_WIDGET(info->username_error));
     }
@@ -120,6 +123,7 @@ void get_user (GtkButton *button, gpointer user_data)
         gtk_widget_show(GTK_WIDGET(info -> main_new));
         gtk_widget_show(GTK_WIDGET(info -> main_load));
     }
+    socket_close(fd);
 }
 
 void abort_fct(GtkButton *button, gpointer user_data)
@@ -157,8 +161,6 @@ void load_fct(GtkButton *button, gpointer user_data)
         //TODO Envoyer load dans fct anaïs puis fermer ui
     }
     */
-
-
 }
 
 void load(GtkButton *button, gpointer user_data)
