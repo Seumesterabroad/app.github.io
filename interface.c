@@ -402,17 +402,16 @@ void confirm_s(GtkButton *button, gpointer user_data)
         list_actualis(info->sentinel,donnee);        
         gtk_label_set_text(info->main_number,str);
         gtk_widget_hide(GTK_WIDGET(info->main_error));
+        //Ajout de la nouvelle data à la liste
+        GtkTreeIter iter;
+        gtk_list_store_append (info->list, &iter);
+        gtk_list_store_set (info->list, &iter,
+                            COLUMN_INDEX, info->nb,
+                            COLUMN_NAME, donnee->name,
+                            COLUMN_TIME,  duree,
+                            -1);
     }
     
-    //Ajout de la nouvelle data à la liste
-    GtkTreeIter iter;
-    gtk_list_store_append (info->list, &iter);
-    gtk_list_store_set (info->list, &iter,
-                        COLUMN_INDEX, info->nb,
-                        COLUMN_NAME, donnee->name,
-                        COLUMN_TIME,  duree,
-                        -1);
-
     //Fermeture
     sub_close(info->sub_cancel,user_data);
 }
