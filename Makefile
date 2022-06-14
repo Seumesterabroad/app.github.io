@@ -23,6 +23,5 @@ clean:
 	rm *.o
 	rm *.d
 	rm interface
-	rm *.bmp
 
 #END
