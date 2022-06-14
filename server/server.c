@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <sqlite3.h>
 #include "shared_queue.h"
+#include <sys/stat.h>
 
 // Number of threads.
 const size_t THREAD_COUNT = 4;
@@ -17,12 +18,14 @@ const size_t THREAD_COUNT = 4;
 const size_t BUFFER_SIZE = 256;
 
 // Constant strings
-char path[] = "./graph_pic/graph_";
+char path[] = "./";
+char slash[] = "/";
 char extension_BMP[] = ".bmp";
 
-struct login_data {
+struct login_data
+{
 	int fd;
-	char** password;
+	char **password;
 	int number;
 };
 
@@ -41,7 +44,7 @@ void echo(int fd_in, int fd_out)
 {
 	char buffer[BUFFER_SIZE];
 	ssize_t r;
-	while(1)
+	while (1)
 	{
 		r = read(fd_in, buffer, BUFFER_SIZE);
 		if (!r)
@@ -52,14 +55,23 @@ void echo(int fd_in, int fd_out)
 	}
 }
 
-int login(void* data, int argc, char** argv, char** colsName)
+int get_amount(void *data, int argc, char **argv, char **colsName)
+{
+	(void)argc;
+	(void)colsName;
+	printf("bite : %s\n", argv[0]);
+	*(int *)data = atoi(argv[0]);
+	return 0;
+}
+
+int login(void *data, int argc, char **argv, char **colsName)
 {
 	printf("Entered login()\n");
 
-	(void) argc;
-	(void) colsName;
-	struct login_data* login_data = (struct login_data *)data;
-	login_data->number ++;
+	(void)argc;
+	(void)colsName;
+	struct login_data *login_data = (struct login_data *)data;
+	login_data->number++;
 	if (!strcmp(*(login_data->password), argv[0]))
 	{
 		// Bon mot de passe
@@ -79,19 +91,19 @@ int login(void* data, int argc, char** argv, char** colsName)
 }
 
 // Function executed by the threads.
-void* worker(void* arg)
+void *worker(void *arg)
 {
 	printf("Entered worker\n");
 
 	// Gets the shared queue.
-	shared_queue* queue = arg;
+	shared_queue *queue = arg;
 
 	while (1)
 	{
 		int sock = shared_queue_pop(queue);
 
-		int action = 0;
-		read(sock, &action, 1);
+		int action;
+		read(sock, &action, sizeof(int));
 		printf("Viens de read la sock\n");
 		printf("Valeur de action: %d\n", action);
 
@@ -103,17 +115,17 @@ void* worker(void* arg)
 			int u_len = 0, p_len = 0;
 
 			printf("About to read u_len\n");
-			read(sock, &u_len, 16);
+			read(sock, &u_len, sizeof(int));
 			printf("Read u_len = %d\n", u_len);
-			char* username = calloc(u_len + 1, 1);
+			char *username = calloc(u_len + 1, 1);
 			if (!username)
 				errx(EXIT_FAILURE, "calloc()\n");
 			printf("About to read username\n");
 			read(sock, username, u_len);
 			printf("Read username = %s\n", username);
 
-			read(sock, &p_len, 16);
-			char* password = calloc(p_len + 1, 1);
+			read(sock, &p_len, sizeof(int));
+			char *password = calloc(p_len + 1, 1);
 			if (!password)
 				errx(EXIT_FAILURE, "calloc()\n");
 			read(sock, password, p_len);
@@ -122,37 +134,300 @@ void* worker(void* arg)
 			sqlite3 *db;
 			int rc;
 
-			rc = sqlite3_open("../SeumesterAbroad.db", &db);
+			rc = sqlite3_open("/server/db/SeumesterAbroad.db", &db);
 			if (rc)
 				errx(EXIT_FAILURE, "Couldn't open database\n");
 
 			// SQL Statement
 			int len = u_len + 47;
-			char* query = calloc(len, 1);
+			char *query = calloc(len, 1);
 			if (!query)
 				errx(EXIT_FAILURE, "calloc()\n");
 			sprintf(query, "SELECT PASSWORD FROM users WHERE USERNAME = '%s'", username);
 
-			struct login_data* data = calloc(sizeof(*data), 1);
+			struct login_data *data = calloc(sizeof(*data), 1);
 			if (!data)
 				errx(EXIT_FAILURE, "calloc()\n");
 			data->password = &password;
 			data->fd = sock;
 			data->number = 0;
 
-			printf("Before callin sqlite3_exec() (with login)\n");
-			rc = sqlite3_exec(db, query, login, (void *)data, NULL);
+			printf("%s\n", query);
 
-			if (data->number == 0) {
+			printf("Before callin sqlite3_exec() (with login)\n");
+			char *zErrMsg = 0;
+			rc = sqlite3_exec(db, query, login, (void *)data, &zErrMsg);
+			if (rc)
+			{
+				printf("%s\n", zErrMsg);
+				errx(EXIT_FAILURE, "Error in SELECT\n");
+			}
+
+			if (data->number == 0)
+			{
 				int len_bis = 68 + u_len + p_len;
-				char* add = calloc(len_bis, 1);
+				char *add = calloc(len_bis, 1);
 				if (!add)
 					errx(EXIT_FAILURE, "calloc()\n");
 				sprintf(add, "INSERT INTO users(USERNAME, PASSWORD, NB_IMAGES) VALUES ('%s', '%s', 0)", username, password);
 				rc = sqlite3_exec(db, add, NULL, NULL, NULL);
+				free(add);
 			}
 
+			free(username);
+			free(password);
+			free(query);
+			free(data);
+
 			sqlite3_close(db);
+		}
+
+		else if (action == 1)
+		{
+
+			printf("Action choisie: Envoi Image\n");
+
+			int u_len = 0, i_len = 0;
+
+			printf("About to read u_len\n");
+			read(sock, &u_len, sizeof(int));
+			printf("Read u_len = %d\n", u_len);
+			char *username = calloc(u_len + 1, 1);
+			if (!username)
+				errx(EXIT_FAILURE, "calloc()\n");
+			printf("About to read username\n");
+			read(sock, username, u_len);
+			printf("Read username = %s\n", username);
+
+			sqlite3 *db;
+			int rc;
+
+			rc = sqlite3_open("../SeumesterAbroad.db", &db);
+			if (rc)
+				errx(EXIT_FAILURE, "Couldn't open database\n");
+
+			int len = u_len + 61;
+			char *query = calloc(len, 1);
+			if (!query)
+				errx(EXIT_FAILURE, "calloc()\n");
+			sprintf(query, "UPDATE users SET NB_IMAGES = NB_IMAGES+1 WHERE USERNAME = '%s'", username);
+			rc = sqlite3_exec(db, query, NULL, NULL, NULL);
+			if (rc)
+				errx(EXIT_FAILURE, "Error in update\n");
+
+			free(query);
+
+			len = 48 + u_len;
+			int num = 0;
+			char *query2 = calloc(len, 1);
+			if (!query2)
+				errx(EXIT_FAILURE, "calloc()\n");
+			sprintf(query2, "SELECT NB_IMAGES FROM users WHERE USERNAME = '%s'", username);
+			rc = sqlite3_exec(db, query2, get_amount, (void *)&num, NULL);
+			if (rc)
+				errx(EXIT_FAILURE, "Error in SELECT\n");
+
+			printf("%d\n", num);
+
+			free(query2);
+
+			read(sock, &i_len, sizeof(int));
+			printf("Picture size : %d\n", i_len);
+
+			char *p_array = calloc(i_len, 1);
+			read(sock, p_array, i_len);
+
+			FILE *image;
+			char *p_path = calloc(2 + u_len + 1 + (num / 10 + 1) + 5, sizeof(char));
+
+			if (!p_path)
+				errx(EXIT_FAILURE, "calloc()");
+
+			strcat(p_path, path);
+			strcat(p_path, username);
+			struct stat st;
+			if (stat(p_path, &st) == -1)
+			{
+				mkdir(p_path, 0777);
+			}
+			strcat(p_path, slash);
+			char *number = calloc((num / 10) + 2, 1);
+			sprintf(number, "%d", num);
+			strcat(p_path, number);
+			strcat(p_path, extension_BMP);
+
+			image = fopen(p_path, "wb+");
+			printf("\nConcat done\n");
+			printf("%d\n", num);
+			printf("%s\n", p_path);
+			fwrite(p_array, 1, i_len, image);
+
+			free(p_path);
+			free(p_array);
+			fclose(image);
+		}
+
+		else if (action == 2)
+		{
+			printf("Action choisie: Reception Toutes Images\n");
+
+			int u_len = 0;
+
+			printf("About to read u_len\n");
+			read(sock, &u_len, sizeof(int));
+			printf("Read u_len = %d\n", u_len);
+			char *username = calloc(u_len + 1, 1);
+			if (!username)
+				errx(EXIT_FAILURE, "calloc()\n");
+			printf("About to read username\n");
+			read(sock, username, u_len);
+			printf("Read username = %s\n", username);
+
+			sqlite3 *db;
+			int rc;
+
+			rc = sqlite3_open("../SeumesterAbroad.db", &db);
+			if (rc)
+				errx(EXIT_FAILURE, "Couldn't open database\n");
+
+			int len = 48 + u_len;
+			int num = 0;
+			char *query2 = calloc(len, 1);
+			if (!query2)
+				errx(EXIT_FAILURE, "calloc()\n");
+			sprintf(query2, "SELECT NB_IMAGES FROM users WHERE USERNAME = '%s'", username);
+			rc = sqlite3_exec(db, query2, get_amount, (void *)&num, NULL);
+
+			write(sock, &num, sizeof(int));
+
+			for (int i = 1; i <= num; i++)
+			{
+				char *p_path = calloc(2 + u_len + 1 + (num / 10 + 1) + 5, sizeof(char));
+				strcat(p_path, path);
+				strcat(p_path, username);
+				if (!p_path)
+					errx(EXIT_FAILURE, "calloc()");
+				strcat(p_path, slash);
+				char *number = calloc((i / 10) + 2, 1);
+				sprintf(number, "%d", i);
+				strcat(p_path, number);
+				strcat(p_path, extension_BMP);
+
+				printf("%s\n", p_path);
+
+				FILE *picture;
+				picture = fopen(p_path, "r");
+				int p_size;
+				fseek(picture, 0, SEEK_END);
+				p_size = ftell(picture);
+				printf("Size = %d\n", p_size);
+				fseek(picture, 0, SEEK_SET);
+
+				// Send Picture Size
+				printf("Sending Picture Size\n");
+				write(sock, &p_size, sizeof(int));
+
+				// Send Picture as Byte Array
+				printf("Sending Picture as Byte Array\n");
+				char pic_buffer[p_size];
+				while (!feof(picture))
+				{
+					fread(pic_buffer, 1, sizeof(pic_buffer), picture);
+					write(sock, pic_buffer, sizeof(pic_buffer));
+					bzero(pic_buffer, sizeof(pic_buffer));
+				}
+				free(p_path);
+				free(number);
+
+				fclose(picture);
+			}
+		}
+
+		else if (action == 3)
+		{
+			printf("Action choisie: Reception Image\n");
+
+			int u_len = 0;
+
+			printf("About to read u_len\n");
+			read(sock, &u_len, sizeof(int));
+			printf("Read u_len = %d\n", u_len);
+			char *username = calloc(u_len + 1, 1);
+			if (!username)
+				errx(EXIT_FAILURE, "calloc()\n");
+			printf("About to read username\n");
+			read(sock, username, u_len);
+			printf("Read username = %s\n", username);
+
+			sqlite3 *db;
+			int rc;
+
+			rc = sqlite3_open("../SeumesterAbroad.db", &db);
+			if (rc)
+				errx(EXIT_FAILURE, "Couldn't open database\n");
+
+			int len = 48 + u_len;
+			int num = 0;
+			char *query2 = calloc(len, 1);
+			if (!query2)
+				errx(EXIT_FAILURE, "calloc()\n");
+			sprintf(query2, "SELECT NB_IMAGES FROM users WHERE USERNAME = '%s'", username);
+			rc = sqlite3_exec(db, query2, get_amount, (void *)&num, NULL);
+
+			int num2;
+
+			read(sock, &num2, sizeof(int));
+
+			if (num2 <= 0 || num2 > num)
+			{
+				num2 = 0;
+				write(sock, &num2, sizeof(int));
+			}
+			else
+			{
+				num = num2;
+				num2 = 0;
+				write(sock, &num2, sizeof(int));
+
+				char *p_path = calloc(2 + u_len + 1 + (num / 10 + 1) + 5, sizeof(char));
+				strcat(p_path, path);
+				strcat(p_path, username);
+				if (!p_path)
+					errx(EXIT_FAILURE, "calloc()");
+				strcat(p_path, slash);
+				char *number = calloc((num / 10) + 2, 1);
+				sprintf(number, "%d", num);
+				strcat(p_path, number);
+				strcat(p_path, extension_BMP);
+
+				printf("%s\n", p_path);
+
+				FILE *picture;
+				picture = fopen(p_path, "r");
+				int p_size;
+				fseek(picture, 0, SEEK_END);
+				p_size = ftell(picture);
+				printf("Size = %d\n", p_size);
+				fseek(picture, 0, SEEK_SET);
+
+				// Send Picture Size
+				printf("Sending Picture Size\n");
+				write(sock, &p_size, sizeof(int));
+
+				// Send Picture as Byte Array
+				printf("Sending Picture as Byte Array\n");
+				char pic_buffer[p_size];
+				while (!feof(picture))
+				{
+					fread(pic_buffer, 1, sizeof(pic_buffer), picture);
+					write(sock, pic_buffer, sizeof(pic_buffer));
+					bzero(pic_buffer, sizeof(pic_buffer));
+				}
+				free(p_path);
+				free(number);
+
+				fclose(picture);
+			}
 		}
 
 		/*
@@ -169,12 +444,12 @@ void* worker(void* arg)
 		printf("Array Created\n");
 		read(sock, n_array, n_size);
 		printf("Name = %s\n", n_array);
-		
+
 		// Read Picture Size
 		printf("Reading Picture Size\n");
 		int p_size;
 		read(sock, &p_size, sizeof(int));
-		printf("Picture size = %d\n", p_size); 
+		printf("Picture size = %d\n", p_size);
 
 		// Read Picture Byte Array
 		printf("Reading Picture Byte Array\n");
@@ -197,7 +472,7 @@ void* worker(void* arg)
 			p_path[i] = n_array[i - 18];
 			printf("%c", p_path[i]);
 		}
-		
+
 		for (int i = 18 + n_size; i < 22 + n_size; i++) {
 			p_path[i] = extension_BMP[i - 18 - n_size];
 			printf("%c", p_path[i]);
@@ -206,7 +481,7 @@ void* worker(void* arg)
 		image = fopen(p_path, "w");
 		printf("\nConcat done\n");
 		fwrite(p_array, 1, sizeof(p_array), image);
-		
+
 		free(p_path);
 		fclose(image);
 		close(sock);
@@ -220,7 +495,7 @@ void* worker(void* arg)
 int main()
 {
 	// Creates the shared queue.
-	shared_queue* queue = shared_queue_new();
+	shared_queue *queue = shared_queue_new();
 
 	// Declare and initialize hints
 	struct addrinfo hints;
@@ -230,11 +505,11 @@ int main()
 	hints.ai_flags = AI_PASSIVE;
 
 	// Get the linked list
-	struct addrinfo* result;
+	struct addrinfo *result;
 	int err = getaddrinfo(NULL, "2048", &hints, &result);
 
 	// Iterate over the linked list
-	struct addrinfo* p;
+	struct addrinfo *p;
 
 	// File descriptor for the socket
 	int sfd;
