@@ -185,6 +185,21 @@
               </packing>
             </child>
             <child>
+              <object class="GtkButton" id="load_path">
+                <property name="label" translatable="yes">Sauvegarder</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="margin_right">20</property>
+                <property name="margin_bottom">10</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkLabel" id="load_error">
                 <property name="can_focus">False</property>
                 <property name="margin_right">20</property>
@@ -201,7 +216,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">2</property>
+                <property name="position">3</property>
               </packing>
             </child>
           </object>
@@ -367,22 +382,6 @@ Diagramme Pert</property>
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="main_new_comp">
-                <property name="label" translatable="yes">Nouvelle composante</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="margin_right">20</property>
-                <property name="margin_bottom">15</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="pack_type">end</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkLabel" id="main_error">
                 <property name="can_focus">False</property>
                 <property name="margin_top">20</property>
@@ -396,6 +395,22 @@ cette nouvelle composante !</property>
                   <attribute name="underline" value="True"/>
                   <attribute name="foreground" value="#cccc00000000"/>
                 </attributes>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="pack_type">end</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="main_new_comp">
+                <property name="label" translatable="yes">Nouvelle composante</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="margin_right">20</property>
+                <property name="margin_bottom">15</property>
               </object>
               <packing>
                 <property name="expand">False</property>

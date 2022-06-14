@@ -29,6 +29,7 @@ typedef struct Informations
     GtkButton* comp_cancel;
     GtkButton* load_confirm;
     GtkButton* load_cancel;
+    GtkButton* load_path;
 
     GtkEntry* sub_nom;
     GtkEntry* sub_duree;
@@ -97,8 +98,47 @@ void save(GtkButton *button, gpointer user_data)
         char *filename;
         filename = gtk_file_chooser_get_filename (chooser);
         SDL_SaveBMP(info->image,filename);
-        send_image(&fd,&info->username,&filename);
+        char* pars = parseur_str(filename);
+        send_image(&fd,&info->username,&filename,&pars);
+        free(pars);
         free(filename);
+    }
+    socket_close(fd);
+    gtk_widget_destroy (dialog);
+    gtk_widget_hide(GTK_WIDGET(info->result_save));
+}
+
+void path (GtkButton *button, gpointer user_data)
+{
+    (void)(button);
+    Informations* info = user_data;
+    GtkWidget *dialog;
+    GtkFileChooser *chooser;
+    GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
+    gint res;
+    int fd = socket_connect();
+
+
+    dialog = gtk_file_chooser_dialog_new ("Save File",
+                                        info->result_window,
+                                        action,
+                                        ("_Cancel"),
+                                        GTK_RESPONSE_CANCEL,
+                                        ("_Save"),
+                                        GTK_RESPONSE_ACCEPT,
+                                        NULL);
+    chooser = GTK_FILE_CHOOSER (dialog);
+
+    gtk_file_chooser_set_do_overwrite_confirmation (chooser, TRUE);
+
+    gtk_file_chooser_set_current_name (chooser,"Untitled document");
+
+    res = gtk_dialog_run (GTK_DIALOG (dialog));
+    if (res == GTK_RESPONSE_ACCEPT)
+    {
+        char *filename;
+        filename = gtk_file_chooser_get_filename (chooser);
+        select_file(&fd,&filename);
     }
     socket_close(fd);
     gtk_widget_destroy (dialog);
@@ -147,20 +187,24 @@ void load_fct(GtkButton *button, gpointer user_data)
     Informations* info = user_data;
     
     info->load = (char *) gtk_entry_get_text(GTK_ENTRY(info->load_entry));
+    int fd = socket_connect();
 
     //TODO Faire un test savoir si la ref est connue puis que faire ? fermer ?
-    /*
-    if ( condition )
+    
+    if (get_image(&fd,&info->username,&info->load) == 0)
     {
         gtk_entry_set_text(GTK_ENTRY(info->load_entry),"");
         gtk_widget_show(GTK_WIDGET(info -> load_error)); 
     }
     else
     {
-        gtk_widget_hide(GTK_WIDGET(info -> load_window));
-        //TODO Envoyer load dans fct anaïs puis fermer ui
+        gtk_widget_hide(GTK_WIDGET(info -> load_error)); 
+        gtk_widget_hide(GTK_WIDGET(info -> load_cancel)); 
+        gtk_widget_hide(GTK_WIDGET(info -> load_confirm)); 
+        gtk_widget_show(GTK_WIDGET(info -> load_path)); 
     }
-    */
+    
+    socket_close(fd);
 }
 
 void load(GtkButton *button, gpointer user_data)
@@ -457,6 +501,7 @@ int main()
     GtkButton* comp_confirm = GTK_BUTTON(gtk_builder_get_object(builder, "comp_confirm"));
     GtkButton* load_cancel = GTK_BUTTON(gtk_builder_get_object(builder, "load_cancel"));
     GtkButton* comp_cancel = GTK_BUTTON(gtk_builder_get_object(builder, "comp_cancel"));
+    GtkButton* load_path = GTK_BUTTON(gtk_builder_get_object(builder, "load_path"));
 
     GtkEntry* sub_nom = GTK_ENTRY(gtk_builder_get_object(builder, "sub_nom"));
     GtkEntry* nb_tot_comp = GTK_ENTRY(gtk_builder_get_object(builder, "nb_tot_comp"));
@@ -539,6 +584,7 @@ int main()
         .comp_cancel = comp_cancel,
         .load_confirm = load_confirm,
         .load_cancel = load_cancel,
+        .load_path = load_path,
 
         .sub_nom = sub_nom,
         .sub_duree = sub_duree,
@@ -596,6 +642,7 @@ int main()
     g_signal_connect(comp_confirm, "clicked", G_CALLBACK(new_fct), &info);
     g_signal_connect(load_cancel, "clicked", G_CALLBACK(abort_fct), &info);
     g_signal_connect(comp_cancel, "clicked", G_CALLBACK(abort_fct), &info);
+    g_signal_connect(load_path, "clicked", G_CALLBACK(path), &info);
 
     g_object_unref(G_OBJECT(builder));
     gtk_widget_show(GTK_WIDGET(main_window));
@@ -609,6 +656,8 @@ int main()
     gtk_widget_hide(GTK_WIDGET(main_number));
     gtk_widget_hide(GTK_WIDGET(main_confirm));
     gtk_widget_hide(GTK_WIDGET(main_new_comp));
+    gtk_widget_hide(GTK_WIDGET(load_path)); 
+
 
 
     // Runs the main loop.

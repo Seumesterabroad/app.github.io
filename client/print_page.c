@@ -66,112 +66,69 @@ int connexion(int *fd, char **username, char **password)
     return ret;
 }
 
-void send_image(int *fd, char **username, char **path)
+void send_image(int *fd, char **username, char **path, char **name)
 {
-    // Send code 1
-    int k = 1;
-    if (write(*fd, &k, sizeof(int)) == -1)
-            err(1, "An error occurred");
-
-    int len = strlen(*username);
-
-    // Send username and its length
-    if (write(*fd, &len, sizeof(int)) == -1)
-            err(1, "An error occurred");
-    if (write(*fd, *username, strlen(*username)) == -1)
-            err(1, "An error occurred");
-
-    // Get Picture Size
-    printf("Getting Picture Size\n");
     FILE *picture;
     picture = fopen(*path, "r");
-    int p_size;
-    fseek(picture, 0, SEEK_END);
-    p_size = ftell(picture);
-    printf("Size = %d\n", p_size);
-    fseek(picture, 0, SEEK_SET);
 
-    // Send Picture Size
-    printf("Sending Picture Size\n");
-    if (write(*fd, &p_size, sizeof(int)) == -1)
+    if (picture != NULL)
+    {
+        // Send code 1
+        int k = 1;
+        if (write(*fd, &k, sizeof(int)) == -1)
             err(1, "An error occurred");
 
-    // Send Picture as Byte Array
-    printf("Sending Picture as Byte Array\n");
-    char pic_buffer[p_size];
-    while (!feof(picture))
-    {
-        if (fread(pic_buffer, 1, sizeof(pic_buffer), picture) != sizeof(pic_buffer))
-            errx(EXIT_FAILURE, "fread()");
-        if (write(*fd, pic_buffer, sizeof(pic_buffer)) == -1)
+        int len = strlen(*username);
+
+        // Send username and its length
+        if (write(*fd, &len, sizeof(int)) == -1)
             err(1, "An error occurred");
-        bzero(pic_buffer, sizeof(pic_buffer));
+        if (write(*fd, *username, len) == -1)
+            err(1, "An error occurred");
+
+        int name_len = strlen(*name);
+
+        if (write(*fd, &name_len, sizeof(int)) == -1)
+            err(1, "An error occurred");
+        if (write(*fd, *name, name_len) == -1)
+            err(1, "An error occurred");
+        // Get Picture Size
+        printf("Getting Picture Size\n");
+        int p_size;
+        if (fseek(picture, 0, SEEK_END) != 0)
+            err(1, "An error occurred");
+        p_size = ftell(picture);
+        printf("Size = %d\n", p_size);
+        if (fseek(picture, 0, SEEK_SET) != 0)
+            err(1, "An error occurred");
+
+        // Send Picture Size
+        printf("Sending Picture Size\n");
+        if (write(*fd, &p_size, sizeof(int)) == -1)
+            err(1, "An error occurred");
+
+        // Send Picture as Byte Array
+        printf("Sending Picture as Byte Array\n");
+
+        char *pic_buffer = calloc(p_size, 1);
+        int h = 0;
+        while (h < p_size)
+        {
+            if (fread(pic_buffer, 1, p_size, picture) <= 0) // JE SUIS PAS SURE DE CETTE CONDITION
+                err(1, "An error occurred");
+            int g = write(*fd, pic_buffer, p_size);
+            printf("bytes sent : %d\n", g);
+            bzero(pic_buffer, p_size);
+            h += g;
+        }
     }
-}
 
-void get_images(int *fd, char **username)
-{
-    // setup ./images folder
-    struct stat st;
-
-    if (stat(path_images, &st) == -1)
-    {
-        mkdir(path_images, 0777);
-    }
-
-    // Send code 2
-    int k = 2;
+    int k = 5;
     if (write(*fd, &k, sizeof(int)) == -1)
-            err(1, "An error occurred");
-
-    int len = strlen(*username);
-
-    // Send username and its length
-    if (write(*fd, &len, sizeof(int)) == -1)
-            err(1, "An error occurred");
-    if (write(*fd, *username, strlen(*username)) == -1)
-            err(1, "An error occurred");
-
-    int images;
-
-    if (read(*fd, &images, sizeof(int)) == -1)
-            err(1, "An error occurred");
-    for (int i = 1; i <= images; i++)
-    {
-        int i_len;
-        if (read(*fd, &i_len, sizeof(int)) == -1)
-            err(1, "An error occurred");
-        printf("Picture size : %d\n", i_len);
-
-        char *p_array = calloc(i_len, 1);
-        if (read(*fd, p_array, i_len) == -1)
-            err(1, "An error occurred");
-
-        FILE *image;
-
-        char *path = calloc(10 + (i / 10) + 2 + 4, 1);
-        if (!path)
-            errx(EXIT_FAILURE, "calloc()");
-        strcat(path, path_images);
-        char *number = calloc((i / 10) + 2, 1);
-        sprintf(number, "%d", i);
-        strcat(path, number);
-        strcat(path, extension_BMP);
-
-        image = fopen(path, "wb+");
-        printf("\nConcat done\n");
-        printf("%d\n", i);
-        printf("%s\n", path);
-        fwrite(p_array, 1, i_len, image);
-
-        free(path);
-        free(number);
-        free(p_array);
-        fclose(image);
-    }
+        err(1, "An error occurred");
 }
 
-char* parseur(char* str)
+char* parseur_str(char* str)
 {
     size_t slash = 0;
     size_t i = 0;
@@ -192,7 +149,7 @@ char* parseur(char* str)
     return res;
 }
 
-int get_image(int *fd, char **username, char **name_im, char **path_im)
+int get_image(int *fd, char **username, char **name_im)
 {
     // Send code 3
     int k = 3;
@@ -219,32 +176,6 @@ int get_image(int *fd, char **username, char **name_im, char **path_im)
 
     if (result == 0)
     {
-        int i_len;
-        if (read(*fd, &i_len, sizeof(int)) == -1)
-            err(1, "An error occurred");
-        printf("Picture size : %d\n", i_len);
-
-        FILE *image;
-
-        image = fopen(*
-        path_im, "wb");
-        printf("\nConcat done\n");
-
-        char *p_array = calloc(i_len, 1);
-        int h = 0;
-        while (h < i_len)
-        {
-            int g = read(*fd, p_array, i_len);
-            if (g == -1)
-                err(1, "An error occurred");
-            printf("bytes read : %d\n", g);
-            if (fwrite(p_array, 1, g, image) != (size_t) g)
-                err(1, "An error occurred");
-            h += g;
-        }
-
-        free(p_array);
-        fclose(image);
         return 1;
     }
     else
@@ -252,6 +183,35 @@ int get_image(int *fd, char **username, char **name_im, char **path_im)
         printf("Image Existe po !\n");
         return 0;
     }
+}
+
+void select_file (int *fd,char **path_im)
+{
+    int i_len;
+    if (read(*fd, &i_len, sizeof(int)) == -1)
+        err(1, "An error occurred");
+    printf("Picture size : %d\n", i_len);
+
+    FILE *image;
+
+    image = fopen(*path_im, "wb");
+    printf("\nConcat done\n");
+
+    char *p_array = calloc(i_len, 1);
+    int h = 0;
+    while (h < i_len)
+    {
+        int g = read(*fd, p_array, i_len);
+        if (g == -1)
+            err(1, "An error occurred");
+        printf("bytes read : %d\n", g);
+        if (fwrite(p_array, 1, g, image) != (size_t) g)
+            err(1, "An error occurred");
+        h += g;
+    }
+
+    free(p_array);
+    fclose(image);
 }
 
 int socket_connect()
