@@ -1,22 +1,5 @@
 #include "construction.h"
 
-void plotSheet(SDL_Surface* res, size_t height, size_t width)
-{
-    //vertical lines
-    for (size_t i = 0; i < height; i++)
-    {
-        for (size_t j = 0; j < width; j++)
-        {
-            if(j == 0 || j == 200 || j == 300 || j == 400  || j == 500 || j == 600 || j== 699 || i % 25 == 0)
-            {
-                put_pixel(res,j,i,SDL_MapRGB(res->format, 0,0,0));
-            }
-        }
-        
-    }
-    
-}
-
 void fill(SDL_Surface* res, size_t x, size_t y, char* string)
 {
     if(TTF_Init()==-1) {
@@ -40,20 +23,41 @@ void fill(SDL_Surface* res, size_t x, size_t y, char* string)
     TTF_CloseFont(font);
 }
 
-int get_smallest(graph_p G, int* M)
+void tasksBeforeAfter(graph_p G, SDL_Surface* res)
 {
-    unsigned long smallest = 100000000;
-    int res = -1;
-    for (int i = 1; i < G->num_vertices-1; i++)
+    int* before = calloc(G->num_vertices,sizeof(int));
+    int after = 0;
+    for (int i = 1; i < G->num_vertices-1 ; i++)
     {
-        if(M[i] == 0 && G->nodelist[i].soonest_time_done < smallest)
+        for(adjlist_node_p adj = G->nodelist[i].head; adj != NULL; adj = adj->next)
         {
-            res = i;
-            smallest = G->nodelist[i].soonest_time_done;
+            if(adj->vertex != G->num_vertices-1)
+            {
+                char str[128];
+                //Tasks After
+                sprintf(str,"%d/",adj->vertex);
+                fill(res,(702 + after*25) ,(2 + i*25),str);
+                after += 1;
+
+                //Tasks Before
+                sprintf(str,"%d/",i);
+                fill(res,(602 + before[adj->vertex]*25) ,(2 + adj->vertex*25),str);
+                before[adj->vertex] += 1;
+            }
+            
+        }
+        if (after == 0)
+            fill(res,702  ,(2 + i*25),"None");
+        after = 0;
+    }
+    for (int i = 1; i < G->num_vertices-1 ; i++)
+    {
+        if(before[i] == 0)
+        {
+            fill(res,602  ,(2 + i*25),"None");
         }
     }
-    M[res] = 1;
-    return res;
+    free(before);
 }
 
 void plotGraph(graph_p G, SDL_Surface* res)
@@ -63,48 +67,53 @@ void plotGraph(graph_p G, SDL_Surface* res)
     fill(res,302,2,"Soonest time");
     fill(res,402,2,"Latest time");
     fill(res,502,2,"Slack");
-    fill(res,602,2,"Critical task");
-
-    int* M = calloc(G->num_vertices, sizeof(int));
+    fill(res,602,2,"Tasks Before");
+    fill(res,702,2,"Tasks After");
+    fill(res,802,2,"Critical task");
     for (int i = 1; i < G->num_vertices-1; i++)
     {
-        size_t smallest = i;
-        smallest = get_smallest(G,M);
-        fill(res,2,(2 + i*25),G->nodelist[smallest].name);
-        char str[4];
-        sprintf(str, "%lu", G->nodelist[smallest].time);
+        char str[128];
+        sprintf(str, "%d : %s", i, G->nodelist[i].name);
+        fill(res,2,(2 + i*25),str);
+        sprintf(str, "%lu", G->nodelist[i].time);
         fill(res,202,(2 + i*25),str);
-        sprintf(str, "%lu", G->nodelist[smallest].soonest_time_done);
+        sprintf(str, "%lu", G->nodelist[i].soonest_time_done);
         fill(res,302,(2 + i*25),str);
-        sprintf(str, "%lu", G->nodelist[smallest].latest_time_done);
+        sprintf(str, "%lu", G->nodelist[i].latest_time_done);
         fill(res,402,(2 + i*25),str);
-        sprintf(str, "%lu", G->nodelist[smallest].marge);
-        fill(res,502,(2 + i*25),str);
-        if(!G->nodelist[smallest].marge)
-            fill(res,602,(2 + i*25),"CRITICAL");
+        sprintf(str, "%lu", G->nodelist[i].marge);
+        fill(res,502,(2 + i*25),str); 
+        if(!G->nodelist[i].marge)
+            fill(res,802,(2 + i*25),"CRITICAL");
     }
-    free(M);
+    tasksBeforeAfter(G,res);
     
 }
 
 SDL_Surface* create(size_t num_vertices,graph_p G)
 {
     size_t height = 1 + 25 * (num_vertices+1);
-    size_t width = 700;
+    size_t width = 900;
     SDL_Surface* res = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
     for (size_t i = 0; i < height; i++)
     {
         for (size_t j = 0; j < width; j++)
         {
-            put_pixel(res,j,i,SDL_MapRGB(res->format, 255,255,255));
+            if(j == 0 || j == 200 || j == 300 || j == 400  || j == 500 || j == 600 || j==700 || j==800|| j== 899 || i % 25 == 0)
+            {
+                put_pixel(res,j,i,SDL_MapRGB(res->format, 0,0,0));
+            }
+            else
+            {
+                put_pixel(res,j,i,SDL_MapRGB(res->format, 255,255,255));
+            }
+            
         }
         
     }
-    plotSheet(res,height,width);
     
 
     plotGraph(G,res);
 
     return res;
 }
-
