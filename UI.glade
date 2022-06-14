@@ -16,6 +16,7 @@
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="margin_left">20</property>
             <property name="margin_top">10</property>
             <property name="margin_bottom">10</property>
             <property name="label" translatable="yes">Nombre de composantes:</property>
@@ -30,6 +31,8 @@
           <object class="GtkEntry" id="nb_tot_comp">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="margin_left">10</property>
+            <property name="margin_right">20</property>
             <property name="margin_top">20</property>
             <property name="margin_bottom">20</property>
           </object>
@@ -50,6 +53,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="margin_right">20</property>
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">10</property>
               </object>
@@ -65,6 +69,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="margin_right">20</property>
                 <property name="margin_bottom">10</property>
               </object>
               <packing>
@@ -76,6 +81,7 @@
             <child>
               <object class="GtkLabel" id="comp_error">
                 <property name="can_focus">False</property>
+                <property name="margin_right">20</property>
                 <property name="margin_top">20</property>
                 <property name="label" translatable="yes">Erreur !</property>
                 <attributes>
@@ -116,7 +122,6 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="margin_left">20</property>
-            <property name="margin_right">20</property>
             <property name="margin_top">10</property>
             <property name="margin_bottom">10</property>
             <property name="label" translatable="yes">Référence de l'image:</property>
@@ -131,6 +136,8 @@
           <object class="GtkEntry" id="load_entry">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="margin_left">10</property>
+            <property name="margin_right">20</property>
             <property name="margin_top">20</property>
             <property name="margin_bottom">20</property>
           </object>
@@ -151,7 +158,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="margin_left">20</property>
                 <property name="margin_right">20</property>
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">10</property>
@@ -168,7 +174,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="margin_left">20</property>
                 <property name="margin_right">20</property>
                 <property name="margin_bottom">10</property>
               </object>
@@ -181,6 +186,7 @@
             <child>
               <object class="GtkLabel" id="load_error">
                 <property name="can_focus">False</property>
+                <property name="margin_right">20</property>
                 <property name="margin_top">20</property>
                 <property name="label" translatable="yes">Erreur !</property>
                 <attributes>
@@ -359,6 +365,22 @@ Diagramme Pert</property>
               </packing>
             </child>
             <child>
+              <object class="GtkButton" id="main_new_comp">
+                <property name="label" translatable="yes">Nouvelle composante</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="margin_right">20</property>
+                <property name="margin_bottom">15</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="pack_type">end</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkLabel" id="main_error">
                 <property name="can_focus">False</property>
                 <property name="margin_top">20</property>
@@ -372,22 +394,6 @@ cette nouvelle composante !</property>
                   <attribute name="underline" value="True"/>
                   <attribute name="foreground" value="#cccc00000000"/>
                 </attributes>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="pack_type">end</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="main_new_comp">
-                <property name="label" translatable="yes">Nouvelle composante</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="margin_right">20</property>
-                <property name="margin_bottom">15</property>
               </object>
               <packing>
                 <property name="expand">False</property>
