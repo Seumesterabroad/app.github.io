@@ -120,7 +120,7 @@ void path (GtkButton *button, gpointer user_data)
 
 
     dialog = gtk_file_chooser_dialog_new ("Save File",
-                                        info->result_window,
+                                        info->load_window,
                                         action,
                                         ("_Cancel"),
                                         GTK_RESPONSE_CANCEL,
