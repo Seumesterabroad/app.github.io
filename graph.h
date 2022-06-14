@@ -6,6 +6,10 @@
 #include <stdlib.h>
 #include <err.h>
 #include "string.h"
+#include "SDL/SDL.h"
+#include "SDL/SDL_image.h"
+#include "pixel_operations.h"
+#include "SDL/SDL_ttf.h"
 
 
 /* Adjacency list node*/
@@ -37,13 +41,11 @@ typedef struct graph
 
 typedef struct data_pert
 {
-
     unsigned char *anterio;
     unsigned long duree;
     char* name;
     unsigned long index;
-
-} data_pert;
+}data_pert;
 
 typedef struct list
 {

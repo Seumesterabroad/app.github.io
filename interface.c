@@ -30,7 +30,6 @@ typedef struct Informations
     GtkButton* load_confirm;
     GtkButton* load_cancel;
 
-
     GtkEntry* sub_nom;
     GtkEntry* sub_duree;
     GtkEntry* sub_anterio;
@@ -47,6 +46,7 @@ typedef struct Informations
     GtkLabel* comp_error;
 
     SDL_Surface* image;
+    GtkWidget* image_display;
 
     GtkTreeView* main_tree;
 
@@ -267,7 +267,19 @@ void confirm_m(GtkButton *button, gpointer user_data)
 
     gtk_widget_hide(GTK_WIDGET(info -> main_window));
 
-    traitement(info->sentinel,info->nb_tot);
+    graph_p g = traitement(info->sentinel,info->nb_tot);
+
+    info->image = create(info->nb_tot,g);
+
+    //SDL_SaveBMP(info->image,"image.bmp");
+
+    destroyGraph(g);
+
+    cairo_surface_t *cairosurf = cairo_image_surface_create_for_data (info->image->pixels,CAIRO_FORMAT_RGB24,info->image->w,info->image->h,info->image->pitch);
+
+    //gtk_image_set_from_file(GTK_IMAGE(info->image_display), "output/result.bmp");
+    gtk_image_set_from_surface(GTK_IMAGE(info->image_display),cairosurf);
+
 
     gtk_widget_show(GTK_WIDGET(info -> result_window));
 }
@@ -466,6 +478,8 @@ int main()
 
     GtkScrollbar* scroll = GTK_SCROLLBAR(gtk_builder_get_object(builder, "scroll"));
 
+    GtkWidget* image_display = GTK_WIDGET(gtk_builder_get_object(builder, "image_display"));
+
     GtkTreeView* main_tree = GTK_TREE_VIEW(gtk_builder_get_object(builder, "main_tree"));
     GtkTreeViewColumn *col;
     GtkCellRenderer *renderer;
@@ -554,6 +568,7 @@ int main()
         .nb_tot = 0,
 
         .image = NULL,
+        .image_display = image_display,
 
         .username = NULL,
         .mdp = NULL,

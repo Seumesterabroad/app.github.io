@@ -149,12 +149,13 @@ graph_p traitement(list* sentinel, int nb_comp)
 
     update_val(G,dist1,dist2);
 
-    print_graph(G);
+    //print_graph(G);
 
     free(dist1);
     free(dist2);
     free(din);
     free(dout);
+    
     destroyGraph(Ginv);
     return G;
 }
