@@ -37,7 +37,7 @@ char *build_query(const char *host, size_t *len)
 
 int connexion(int *fd, char **username, char **password)
 {
-    printf("Entered connexion\n");
+    //printf("Entered connexion\n");
 
     int u_len = strlen(*username);
     int p_len = strlen(*password);
@@ -48,11 +48,11 @@ int connexion(int *fd, char **username, char **password)
             err(1, "An error occurred");
     if (write(*fd, &u_len, sizeof(int)) == -1)
             err(1, "An error occurred");
-    printf("u_len sent OK\n");
-    printf("username = %s\n", *username);
+    //printf("u_len sent OK\n");
+    //printf("username = %s\n", *username);
     if (write(*fd, *username, u_len) == -1)
             err(1, "An error occurred");
-    printf("username sent OK\n");
+    //printf("username sent OK\n");
     if (write(*fd, &p_len, sizeof(int)) == -1)
             err(1, "An error occurred");
     if (write(*fd, *password, p_len) == -1)
@@ -62,8 +62,6 @@ int connexion(int *fd, char **username, char **password)
 
     if (read(*fd, &ret, 1) == -1)
             err(1, "An error occurred");
-
-    printf("Post read : %s #### ret = %i\n",*password,ret);
 
     return ret;
 }
@@ -173,36 +171,30 @@ void get_images(int *fd, char **username)
     }
 }
 
-void get_image(int *fd, char **username, int *num)
+int get_image(int *fd, char **username, char **name_im, char **path_im)
 {
-    // setup ./images folder
-    struct stat st;
-
-    if (stat(path_images, &st) == -1)
-    {
-        mkdir(path_images, 0777);
-    }
-
     // Send code 3
     int k = 3;
     if (write(*fd, &k, sizeof(int)) == -1)
-            err(1, "An error occurred");
+        err(1, "An error occurred");
 
     int len = strlen(*username);
 
     // Send username and its length
     if (write(*fd, &len, sizeof(int)) == -1)
-            err(1, "An error occurred");
+        err(1, "An error occurred");
     if (write(*fd, *username, strlen(*username)) == -1)
-            err(1, "An error occurred");
-
-    if (write(*fd, num, sizeof(int)) == -1)
-            err(1, "An error occurred");
+        err(1, "An error occurred");
+    int len2 = strlen(*name_im);
+    if (write(*fd, &len2, sizeof(int)) == -1)
+        err(1, "An error occurred");
+    if (write(*fd, *name_im, len2) == -1)
+        err(1, "An error occurred");
 
     int result;
 
     if (read(*fd, &result, sizeof(int)) == -1)
-            err(1, "An error occurred");
+        err(1, "An error occurred");
 
     if (result == 0)
     {
@@ -211,35 +203,33 @@ void get_image(int *fd, char **username, int *num)
             err(1, "An error occurred");
         printf("Picture size : %d\n", i_len);
 
-        char *p_array = calloc(i_len, 1);
-        if (read(*fd, p_array, i_len) == -1)
-            err(1, "An error occurred");
-
         FILE *image;
 
-        char *path = calloc(10 + (*num / 10) + 2 + 4, 1);
-        if (!path)
-            errx(EXIT_FAILURE, "calloc()");
-        strcat(path, path_images);
-        char *number = calloc((*num / 10) + 2, 1);
-        sprintf(number, "%d", *num);
-        strcat(path, number);
-        strcat(path, extension_BMP);
-
-        image = fopen(path, "wb+");
+        image = fopen(*
+        path_im, "wb");
         printf("\nConcat done\n");
-        printf("%d\n", *num);
-        printf("%s\n", path);
-        fwrite(p_array, 1, i_len, image);
 
-        free(path);
-        free(number);
+        char *p_array = calloc(i_len, 1);
+        int h = 0;
+        while (h < i_len)
+        {
+            int g = read(*fd, p_array, i_len);
+            if (g == -1)
+                err(1, "An error occurred");
+            printf("bytes read : %d\n", g);
+            if (fwrite(p_array, 1, g, image) != (size_t) g)
+                err(1, "An error occurred");
+            h += g;
+        }
+
         free(p_array);
         fclose(image);
+        return 1;
     }
     else
     {
         printf("Image Existe po !\n");
+        return 0;
     }
 }
 
