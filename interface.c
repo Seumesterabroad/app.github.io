@@ -112,7 +112,7 @@ void get_user (GtkButton *button, gpointer user_data)
     info->mdp = (char *) gtk_entry_get_text(GTK_ENTRY(info->mdp_entry));
     int fd = socket_connect();
 
-    if (*info->username == '\0'||*info->username == ' '||connexion(&fd,&info->username,&info->mdp) != 0)
+    if (*info->username == '\0'||*info->username == ' ' ||*info->mdp == '\0'||*info->mdp == ' '||connexion(&fd,&info->username,&info->mdp) != 0)
     {
         gtk_entry_set_text(GTK_ENTRY(info->mdp_entry),"");
         gtk_widget_show(GTK_WIDGET(info->username_error));
