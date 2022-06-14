@@ -62,14 +62,14 @@ void tasksBeforeAfter(graph_p G, SDL_Surface* res)
 
 void plotGraph(graph_p G, SDL_Surface* res)
 {
-    fill(res,2,2,"Name");
-    fill(res,202,2,"Time Needed");
-    fill(res,302,2,"Soonest time");
-    fill(res,402,2,"Latest time");
-    fill(res,502,2,"Slack");
-    fill(res,602,2,"Tasks Before");
-    fill(res,702,2,"Tasks After");
-    fill(res,802,2,"Critical task");
+    fill(res,2,2,"Nom");
+    fill(res,202,2,"Temps");
+    fill(res,302,2,"Le plus tot");
+    fill(res,402,2,"Le plus tard");
+    fill(res,502,2,"Marge");
+    fill(res,602,2,"Antecedants");
+    fill(res,702,2,"Ulterieurs");
+    fill(res,802,2,"Tache Critique");
     for (int i = 1; i < G->num_vertices-1; i++)
     {
         char str[128];
