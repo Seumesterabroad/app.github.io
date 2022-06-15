@@ -15,16 +15,16 @@ La nomination d'un chef de projet chargé d'assurer le suivi du projet, de rendr
 ## Equipe créatrice
 ### Arthus Daimez
 #### Responsable de l'interface utilisateur. 
-"description d'arthus"
+Ce développeur venant tout droit du sud de la France à dévéloppé l'interface utilisateur de notre belle application. Ses compétences en GTK vous offrent une UI digne des plus grandes applications venant de la silicon valley.
 ### Anais Druelle
 #### Responsable de la liaison internet. 
-"description d'anais"
+Cette développeuse bien parisienne vas vous permettre d'utiliser notre application avec une liaison internet.
 ### Quentin Heidrich
 #### Chef du groupe et responsable de la conception de l'algorithme.
-"description de quentin"
+Notre chef bien aimé , ses capacités en leadership et en programmation ont été fondamentales pour le bien de cette magnifique application.
 ### Adam Nessaibia
 #### Responsable de la construction du graphique et du site internet. 
-"description d'adam"
+Lui on ne le connait pas et en vrai il est pas important donc n'y portez pas attention.
 
 ## Telechargement
 
