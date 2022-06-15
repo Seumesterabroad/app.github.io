@@ -30,7 +30,7 @@ Lui on ne le connait pas et en vrai il est pas important donc n'y portez pas att
 
 ### Téléchargement de l'application: 
 [Seumesterabroad-app.zip](./Seumesterabroad-app.zip)
-#### Telechargez l'archive en cliquant sur le lien ci-dessus. Décompressez l'archive. Executer le fichier "nom du fichier" dans le dossier extrait.
+#### Telechargez l'archive en cliquant sur le lien ci-dessus. Décompressez l'archive. Executer le fichier "Lancement" dans le dossier extrait.
 
 ### Cahier des charges du projet: 
 [cahier_des_charges.pdf](./cahier_des_charges_SEUMester_Abroad.pdf)
