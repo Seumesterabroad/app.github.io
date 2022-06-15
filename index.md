@@ -1,6 +1,6 @@
 ## Seumesterabroad
 
-"nom de l'app" est un logiciel qui vous permettra d'organiser votre projet selon la méthode pert.
+"SeumesterAbroad" est un logiciel qui vous permettra d'organiser votre projet selon la méthode pert.
 
 # Qu'est ce que la méthode PERT ?
 La méthode PERT est une technique permettant de gérer l'ordonnancement dans un projet. La méthode PERT consiste à représenter sous forme de graphe, un réseau de tâches dont l'enchaînement permet d'aboutir à l'atteinte des objectifs d'un projet.
@@ -27,13 +27,9 @@ La nomination d'un chef de projet chargé d'assurer le suivi du projet, de rendr
 "description d'adam"
 
 ## Telechargement
-### Pour les utilisateurs de windows: " lien de telechargement"
-Télechargez l'éxécutable en cliquant sur le lien ci-dessus. Executez le fichier télécharger. Lancez le logiciel.
 
-### Pour les utilisateurs de linux: "lien de telechargement"
-Telechargez l'archive en cliquant sur le lien ci-dessus. Décompressez l'archive. Executer le fichier "nom du fichier" dans le dossier extrait.
-
-### Pour les utilisateurs de Mac: "lien de telechargement"
+### Téléchargement de l'application: 
+[Seumesterabroad-app.zip] (./Seumesterabroad-app.zip)
 Telechargez l'archive en cliquant sur le lien ci-dessus. Décompressez l'archive. Executer le fichier "nom du fichier" dans le dossier extrait.
 
 ### Cahier des charges du projet: 
