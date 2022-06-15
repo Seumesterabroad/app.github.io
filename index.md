@@ -27,8 +27,6 @@ La nomination d'un chef de projet chargé d'assurer le suivi du projet, de rendr
 "description d'adam"
 
 ## Telechargement
-### Cahier des charges du projet: 
-[cahier_des_charges.pdf](./cahier_des_charges_SEUMester_Abroad.pdf)
 ### Pour les utilisateurs de windows: " lien de telechargement"
 Télechargez l'éxécutable en cliquant sur le lien ci-dessus. Executez le fichier télécharger. Lancez le logiciel.
 
@@ -38,5 +36,14 @@ Telechargez l'archive en cliquant sur le lien ci-dessus. Décompressez l'archive
 ### Pour les utilisateurs de Mac: "lien de telechargement"
 Telechargez l'archive en cliquant sur le lien ci-dessus. Décompressez l'archive. Executer le fichier "nom du fichier" dans le dossier extrait.
 
-### Support or Contact
+### Cahier des charges du projet: 
+[cahier_des_charges.pdf](./cahier_des_charges_SEUMester_Abroad.pdf)
+### Rapport de la première soutenance:
+[rapport_de_soutenance_1.pdf](./Rapport_de_soutenance_1.pdf)
+### Rapport de la seconde soutenance:
+[rapport_de_soutenance_2.pdf](./rapport_de_soutenance_2.pdf)
+### Rapport du projet:
+[rapport_de_projet.pdf](./rapport_de_tah_le_projet.pdf)
+
+## Support or Contact
 adam.nessaibia@epita.fr
