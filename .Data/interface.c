@@ -55,6 +55,8 @@ typedef struct Informations
 
     GtkScrollbar* scroll;
 
+    int fd;
+
     unsigned long nb;
     unsigned long nb_tot;
 
@@ -105,7 +107,7 @@ void save(GtkButton *button, gpointer user_data)
     }
     socket_close(fd);
     gtk_widget_destroy (dialog);
-    gtk_widget_hide(GTK_WIDGET(info->result_save));
+    gtk_main_quit();
 }
 
 void path (GtkButton *button, gpointer user_data)
@@ -116,7 +118,6 @@ void path (GtkButton *button, gpointer user_data)
     GtkFileChooser *chooser;
     GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
     gint res;
-    int fd = socket_connect();
 
 
     dialog = gtk_file_chooser_dialog_new ("Save File",
@@ -138,10 +139,13 @@ void path (GtkButton *button, gpointer user_data)
     {
         char *filename;
         filename = gtk_file_chooser_get_filename (chooser);
-        select_file(&fd,&filename);
+        select_file(&info->fd,&filename);
+        free(filename);
+
     }
-    socket_close(fd);
+    socket_close(info->fd);
     gtk_widget_destroy (dialog);
+    gtk_main_quit();
 }
 
 void get_user (GtkButton *button, gpointer user_data)
@@ -188,13 +192,12 @@ void load_fct(GtkButton *button, gpointer user_data)
     
     info->load = (char *) gtk_entry_get_text(GTK_ENTRY(info->load_entry));
     int fd = socket_connect();
-
-    //TODO Faire un test savoir si la ref est connue puis que faire ? fermer ?
     
     if (get_image(&fd,&info->username,&info->load) == 0)
     {
         gtk_entry_set_text(GTK_ENTRY(info->load_entry),"");
         gtk_widget_show(GTK_WIDGET(info -> load_error)); 
+        socket_close(fd);
     }
     else
     {
@@ -202,9 +205,9 @@ void load_fct(GtkButton *button, gpointer user_data)
         gtk_widget_hide(GTK_WIDGET(info -> load_cancel)); 
         gtk_widget_hide(GTK_WIDGET(info -> load_confirm)); 
         gtk_widget_show(GTK_WIDGET(info -> load_path)); 
+        info->fd = fd;
     }
     
-    socket_close(fd);
 }
 
 void load(GtkButton *button, gpointer user_data)
@@ -604,6 +607,8 @@ int main()
         .main_tree = GTK_TREE_VIEW(main_tree),
 
         .scroll = scroll,
+
+        .fd = 0,
 
         .list = list,
 
