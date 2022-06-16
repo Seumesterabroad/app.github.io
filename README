@@ -1,2 +1,42 @@
 Pour commencer, lancer le script nommé "Bibliothèque", qui installera tout les packages nécéssaires au bon fonctionnement de l'application.
-Une fois ces dernières installées, vous pouvez lancer le script nommé "Lancement".
+Une fois ces dernières installées, vous pouvez exécuter le script nommé "Lancement" et l'application s\'ouvrira.
+
+Une fenêtre s’ouvre, c’est le menu principal de l’application. 
+Cliquez sur le bouton "Commencer", puis rentrez vos identifiants, si c’est votre premièreconnexion, rentrez le nom d’utilisateur et le mot de passe souhaités. 
+Cliquez sur Valider, deux nouveaux boutons apparaissent alors.
+Vous avez le choix entre créer un nouveau projet ou en charger un déjà existant.
+
+Nouveau projet : Une fenêtre s’ouvre dans laquelle vous devez rentrer un entier positif non nul correspondant au nombre total de composantes de
+votre projet. Remarquez alors le bouton "Nouvelle composante". 
+Lorsque vous cliquez sur ce dernier, un fenêtre s’affiche dans laquelle vous devez renseigner le nom de la tache (sans caractères spéciaux), 
+le temps de résolution de la tâche, et enfin les taches necéssaires à la réalisation de celle-ci séparés par un ’/’ (ex : 1/2).
+Vous remarquerez qu’au fur et à mesure que vous rentrez des taches, un tableau s’actualise à droite comprenant les données rentrées. 
+Lorsque vous avez rentré toutes les taches annoncées, un bouton "Valider" se dévérouille.
+Cliquez sur ce dernier pour obtenir le résultat qui s’affichera. 
+Une fois affiché, cliquez sur sauvegarder pour sélectionner ou vous voulez le mettre ainsi que son nom, il sera donc sauvegardé sur votre ordinateur 
+à l’endroit désiré ainsi que sur un serveur.
+
+Charger un projet : Une fenêtre s’ouvre dans laquelle vous devez renseigner le nom de l’image que vous souhaitez récupérer. 
+Si cette image existe bien, un bouton se débloque pour sélectionner l’endroit où vous voulez l’enregistrer.
+
+Après avoir utilisé l’application et entré les données nécessaires, vous devriez avoir une image.
+Nous allons vous expliquer ce que représentent les cases de gauche à droite.
+La première case nommée “Nom” indique l’index d’une tâche ainsi que son nom.
+La deuxième case nommée “Temps” indique le temps nécessaire pour réaliser une tâche.
+La troisième case nommée “Le plus tôt” indique la date à laquelle on peutcommencer la date au plus tôt en ayant fait toutes les tâches nécessaires avant.
+La quatrième case nommée “Le plus tard” indique la date à laquelle on doit commencer la tâche pour ne pas entraîner de retard sur l’ensemble du projet.
+La cinquième case nommée “Marge” indique la quantité de temps qu’on a en plus pour une tâche sans retarder le projet.
+La sixième case nommée “Antecedants” indique l’index des tâches à faire avant la tâche que vous regardez.
+La septième case nommée “Ulterieurs” indique l’index des tâches à faire après la tâche que vous regardez.
+La huitième case nommée “Tache Critique” indique si une case est critique. 
+Autrement dit : qu’elle ne peut pas prendre de retard sans retarder le projet,
+il n’y a pas de marge.
+
+Liste des Packages utilisés: 
+SDL_GFX 1.2
+SDL_Image
+SDL_ttf
+SDL 1.2
+Gtk 3.0
+Gcc
+Make
